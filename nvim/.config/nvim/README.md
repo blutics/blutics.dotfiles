@@ -1,0 +1,4 @@
+# blutics.nvim
+
+
+hello!

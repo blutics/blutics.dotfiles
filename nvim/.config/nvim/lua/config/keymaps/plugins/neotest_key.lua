@@ -1,0 +1,40 @@
+-- local neotest = require("neotest")
+--
+-- -- 테스트 실행 관련
+-- vim.keymap.set("n", "<leader>tt", function()
+--   neotest.run.run(vim.fn.expand("%"))
+-- end, { desc = "Run File Tests" })
+--
+-- vim.keymap.set("n", "<leader>tr", function()
+--   neotest.run.run()
+-- end, { desc = "Run Nearest Test" })
+--
+-- vim.keymap.set("n", "<leader>ta", function()
+--   neotest.run.run(vim.uv.cwd())
+-- end, { desc = "Run All Tests" })
+--
+-- vim.keymap.set("n", "<leade>tA", function()
+--   neotest.run.attach()
+-- end, { desc = "Attach to Test" })
+--
+-- vim.keymap.set("n", "<leader>tl", function()
+--   neotest.run.run_last()
+-- end, { desc = "Run Last Test" })
+--
+-- -- 출력 관련
+-- vim.keymap.set("n", "<leader>to", function()
+--   neotest.output.open({ enter = true })
+-- end, { desc = "Show Test Output" })
+--
+-- vim.keymap.set("n", "<leader>ts", function()
+--   neotest.summary.toggle()
+-- end, { desc = "Toggle Summary" })
+--
+-- -- 실행 제어
+-- vim.keymap.set("n", "<leader>tx", function()
+--   neotest.run.stop()
+-- end, { desc = "Stop Test" })
+--
+-- vim.keymap.set("n", "<leader>tw", function()
+--   neotest.watch.toggle(vim.fn.expand("%"))
+-- end, { desc = "Watch File Tests" })

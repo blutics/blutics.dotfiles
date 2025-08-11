@@ -1,0 +1,28 @@
+return {
+    -- "kylechui/nvim-surround",
+    -- version = "*",  -- 안정 버전 사용
+    -- event = "VeryLazy",  -- 필요할 때 로드
+    -- opts = {
+    --     keymaps = {
+    --         insert = "<C-g>s",     -- 인서트 모드에서 감싸기
+    --         insert_line = "<C-g>S", -- 인서트 모드에서 줄 감싸기
+    --         normal = "ys",         -- 일반 모드에서 감싸기
+    --         normal_cur = "yss",    -- 현재 줄 감싸기
+    --         normal_line = "yS",    -- 줄 단위로 감싸기
+    --         normal_cur_line = "ySS", -- 현재 줄을 줄 단위로 감싸기
+    --         visual = "gs",          -- 비주얼 모드에서 감싸기
+    --         visual_line = "gS",    -- 비주얼 모드에서 줄 단위로 감싸기
+    --         delete = "ds",         -- 삭제
+    --         change = "cs",         -- 변경
+    --     },
+    --     surrounds = {
+    --         -- 커스텀 surrounds 설정
+    --         ["F"] = {  -- 함수 호출 스타일
+    --             add = function()
+    --                 local fname = vim.fn.input("Function name: ")
+    --                 return { { fname .. "(" }, { ")" } }
+    --             end,
+    --         },
+    --     },
+    -- },
+}
