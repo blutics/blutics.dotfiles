@@ -83,13 +83,13 @@ return {
     }
 
     null_ls.setup({
-      sources = sources,
+       sources = sources,
       root_dir = function(fname)
         return vim.fn.finddir(".git", fname .. ";") or vim.fn.findfile("pyproject.toml", fname .. ";")
       end,
       on_attach = function(client, bufnr)
         -- 포매팅 단축키 예시
-        if client.supports_method("textDocument/formatting") then
+if client.supports_method("textDocument/formatting") then
           vim.keymap.set("n", "<leader><leader>k", function()
             vim.lsp.buf.format({ bufnr = bufnr })
           end, { buffer = bufnr, desc = "Formatting with null-ls" })
