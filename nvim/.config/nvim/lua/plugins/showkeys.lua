@@ -5,6 +5,6 @@ return {
   opts = {
     position = "bottom-center",
     show_count = true,
-    maxkeys = 5,
+    maxkeys = 3,
   }
 }

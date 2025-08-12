@@ -49,6 +49,7 @@ return {
       options = {
         icons_enabled = true,
         theme = "auto", -- 테마를 자동으로 설정
+        globalstatus = true,
         component_separators = { left = "", right = "" },
         section_separators = { left = "", right = "" },
         disabled_filetypes = {}, -- 비활성화할 파일 유형
