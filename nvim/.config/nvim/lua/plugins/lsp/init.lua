@@ -16,7 +16,6 @@ return {
         "pyright", -- Python
         "ts_ls",   -- TypeScript
         "yamlls",
-        "nixd",
         -- "pylsp",
       },
       automatic_enable = false,
@@ -127,6 +126,16 @@ return {
       end,
     })
 
+    lspconfig.nil_ls.setup({
+settings = {
+    ["nil"] = {
+      formatting = {
+        command = { "alejandra" } -- nixfmt 대신 alejandra 사용
+      }
+    }
+  },
+    })
+
     -- TypeScript
     lspconfig.ts_ls.setup({
       capabilities = capabilities,
@@ -155,22 +164,6 @@ return {
       }
     })
 
-    lspconfig.nixd.setup({
-      cmd = { "nixd" },
-      settings = {
-        nixd = {
-          -- nixpkgs 기반 패키지/라이브러리 완성
-          nixpkgs = {
-            expr = "import (builtins.getFlake (toString ./.)).inputs.nixpkgs { }",
-          },
-          -- 포맷팅: alejandra 사용
-          formatting = {
-            command = { "alejandra" }, -- nixfmt 또는 nixpkgs-fmt로 교체 가능
-          },
-          -- options 블록 제거 → NixOS/Home Manager/Darwin 옵션 완성 비활성화
-        },
-      }
-    })
     -- LSP 상태 표시 설정
     vim.diagnostic.config({
       virtual_text = true,      -- 인라인 에러 메시지
