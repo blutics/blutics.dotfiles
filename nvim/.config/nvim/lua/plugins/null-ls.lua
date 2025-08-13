@@ -115,13 +115,11 @@ return {
 					-- ↑ 못 찾으면 “프로젝트”가 아닌 것으로 간주하고, 그냥 파일 있는 디렉터리로
 					or util.path.dirname(fname)
 
-				print("root path :", root_path)
 				-- return vim.fn.finddir(".git", fname .. ";") or vim.fn.findfile("pyproject.toml", fname .. ";")
 				return root_path
 			end,
 			on_attach = function(client, bufnr)
 				-- 포매팅 단축키 예시
-        print("on attached!")
 				if client.supports_method("textDocument/formatting") then
 					vim.keymap.set("n", "<leader><leader>k", function()
 						vim.lsp.buf.format({

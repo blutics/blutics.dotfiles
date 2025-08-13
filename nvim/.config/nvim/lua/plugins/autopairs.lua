@@ -9,9 +9,11 @@ return {
           'typescriptreact', 'svelte', 'vue', 'tsx', 'jsx',
           'rescript', 'php', 'markdown'
       },
-      enable_rename = true,
-      enable_close = true,
-      enable_close_on_slash = true,
+      opts = {
+        enable_rename = true,
+        enable_close = true,
+        enable_close_on_slash = true,
+      },
     },
     config = function(_, opts)
       require('nvim-ts-autotag').setup(opts)

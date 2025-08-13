@@ -49,15 +49,22 @@ return {
 				},
 			},
 			render = function(props)
+        local active_color = "#00ff00"
+        local inactive_color = "#888888"
+        -- local modified_color = "#FFE100"
+        local modified_color = "#F72C5B"
+
 				local buf = props.buf
 				local name = vim.api.nvim_buf_get_name(buf)
 				local filename = (name == "" and "[No Name]") or vim.fn.fnamemodify(name, ":t")
-				local modified = vim.bo[buf].modified and "⭕ " or "   "
+				local modified = vim.bo[buf].modified and "✱ " or "  "
 				local readonly = (vim.bo[buf].readonly or not vim.bo[buf].modifiable) and " " or ""
 				local icon, icon_hl = require("nvim-web-devicons").get_icon(filename, nil, { default = true })
-				local color = props.focused and "#00ff00" or "#888888"
+				local color = props.focused and active_color or inactive_color
+
 				return {
-					{ modified .. (icon or "") .. " ", group = icon_hl or "Normal" },
+          { modified, guifg = modified_color, }, 
+					{ (icon or "") .. " ", group = icon_hl or "Normal" },
 					{ filename, guifg = color, gui = "bold" },
 					{ readonly .. "  " },
 				}
