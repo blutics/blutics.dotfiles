@@ -19,7 +19,7 @@ return {
 				"prettier",
 				"stylua",
 				"eslint",
-        
+
 				"alejandra", -- nix formatter
 				-- 필요하다면 "mypy" 등도 추가 가능 (CLI가 존재하는 도구)
 			},
@@ -86,38 +86,7 @@ return {
 
 		null_ls.setup({
 			sources = sources,
-			root_dir = function(fname)
-				local root_path = util.root_pattern(
-					-- JS/TS
-					"package.json",
-					"pnpm-lock.yaml",
-					"yarn.lock",
-					".eslintrc",
-					".eslintrc.json",
-					".eslintrc.js",
-					".prettierrc",
-					".prettierrc.*",
-					"prettier.config.*",
-					-- Python
-					"pyproject.toml",
-					"setup.cfg",
-					"setup.py",
-					-- Lua
-					".stylua.toml",
-					"stylua.toml",
-					-- nix
-					"flake.nix",
-					"default.nix",
-					-- 공통
-					".editorconfig",
-					".git"
-				)(fname)
-					-- ↑ 못 찾으면 “프로젝트”가 아닌 것으로 간주하고, 그냥 파일 있는 디렉터리로
-					or util.path.dirname(fname)
-
-				-- return vim.fn.finddir(".git", fname .. ";") or vim.fn.findfile("pyproject.toml", fname .. ";")
-				return root_path
-			end,
+			root_dir = require("custom.root").find_for_lsp,
 			on_attach = function(client, bufnr)
 				-- 포매팅 단축키 예시
 				if client.supports_method("textDocument/formatting") then

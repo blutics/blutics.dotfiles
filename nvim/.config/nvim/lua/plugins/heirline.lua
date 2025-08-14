@@ -86,9 +86,10 @@ local ViMode = {
 		end),
 	},
 }
+
 return {
 	"rebelot/heirline.nvim",
-  enabled = false,
+	enabled = true,
 	event = "VeryLazy",
 	config = function()
 		local conditions = require("heirline.conditions")
@@ -126,7 +127,92 @@ return {
 		--------------------------------------------------------------------------
 		-- Git 블록 (gitsigns 연동: 브랜치 + 수치)
 		--------------------------------------------------------------------------
+		vim.diagnostic.config({
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = "",
+					[vim.diagnostic.severity.WARN] = "",
+					[vim.diagnostic.severity.INFO] = "󰋇",
+					[vim.diagnostic.severity.HINT] = "󰌵",
+				},
+			},
+		})
+		local Diagnostics = {
+			condition = conditions.has_diagnostics,
+			-- Example of defining custom LSP diagnostic icons, you can copypaste in your config
+			-- Fetching custom diagnostic icons
+			-- error_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.ERROR],
+			-- warn_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.WARN],
+			-- info_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.INFO],
+			-- hint_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.HINT],
 
+			-- If you defined custom LSP diagnostics with vim.fn.sign_define(), use this instead
+			-- Note defining custom LSP diagnostic this way its deprecated, though
+			--static = {
+			--    error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+			--    warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+			--    info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+			--    hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+			--},
+
+			init = function(self)
+				self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+				self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
+				self.hints = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.HINT })
+				self.info = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.INFO })
+
+				self.error_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.ERROR]
+				self.warn_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.WARN]
+				self.info_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.INFO]
+				self.hint_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.HINT]
+			end,
+
+			update = { "DiagnosticChanged", "BufEnter" },
+
+			{
+				provider = "",
+			},
+			{
+				provider = function(self)
+					-- 0 is just another output, we can decide to print it or not!
+					if self.errors > 0 then
+						return self.error_icon .. " " .. self.errors .. " "
+					end
+					return ""
+				end,
+				hl = { fg = colors.diag_error },
+			},
+			{
+				provider = function(self)
+					if self.warnings > 0 then
+						return self.warn_icon .. " " .. self.warnings .. " "
+					end
+					return ""
+				end,
+				hl = { fg = colors.diag_warn },
+			},
+			{
+				provider = function(self)
+					if self.info > 0 then
+						return self.info_icon .. " " .. self.info .. " "
+					end
+					return ""
+				end,
+				hl = { fg = colors.diag_info },
+			},
+			{
+				provider = function(self)
+					if self.hints > 0 then
+						return self.hint_icon .. " " .. self.hints
+					end
+					return ""
+				end,
+				hl = { fg = colors.diag_hint },
+			},
+			{
+				provider = "",
+			},
+		}
 		local Git = {
 			condition = conditions.is_git_repo,
 
@@ -182,27 +268,32 @@ return {
 		}
 		local WorkDir = {
 			init = function(self)
-				self.icon = (vim.fn.haslocaldir(0) == 1 and "l" or "g") .. " " .. " "
+				self.icon = "  "
 				local cwd = vim.fn.getcwd(0)
-				self.cwd = vim.fn.fnamemodify(cwd, ":~")
+				self.cwd = vim.fn.fnamemodify(cwd, "~")
+				self.fname = vim.api.nvim_buf_get_name(0)
+				self.file_dir = (self.fname ~= "" and vim.fn.fnamemodify(self.fname, ":h")) or nil
+				self.file_dir = (self.file_dir == nil and self.cwd) or self.file_dir
+				-- print("kk", self.file_dir)
 			end,
 			hl = { fg = "blue", bold = true },
-
 			flexible = 1,
-
 			{
 				-- evaluates to the full-lenth path
 				provider = function(self)
-          local path = require("..custom.common").get_relative_path()
-					return self.icon .. path .. " "
+					-- print("1" .. self.cwd)
+					local path = require("custom.root").get_root_detail(self.file_dir)
+					-- vim.notify("x :", path.shorten_relative)
+					-- print(path.root_path, path.file_path)
+					return self.icon .. path.root_name .. " * " .. path.shorten_relative .. " *"
 				end,
 			},
 			{
 				-- evaluates to the shortened path
 				provider = function(self)
-					local cwd = vim.fn.pathshorten(self.cwd)
-          local path = require("..custom.common").get_relative_path()
-					return self.icon .. path .. " "
+					-- print("2")
+					local path = require("custom.root").get_root_detail(self.cwd)
+					return self.icon .. path.shorten_relative .. " "
 				end,
 			},
 			{
@@ -210,9 +301,39 @@ return {
 				provider = "",
 			},
 		}
+
 		--------------------------------------------------------------------------
 		-- 최소 예시 StatusLine 조합 (원하는 컴포넌트를 좌/우에 추가하세요)
 		--------------------------------------------------------------------------
+		local FileNameBlock = {
+			-- let's first set up some attributes needed by this component and it's children
+			init = function(self)
+				self.filename = vim.api.nvim_buf_get_name(0)
+			end,
+		}
+
+		local FileIcon = {
+			init = function(self)
+				local has, devicons = pcall(require, "nvim-web-devicons")
+				local filename = self.filename or ""
+				if not has or filename == "" then
+					-- 폴백 아이콘/색
+					self.icon = ""
+					self.icon_color = utils.get_highlight("Directory").fg
+					return
+				end
+				-- local filename = self.filename
+				local extension = vim.fn.fnamemodify(filename, ":e")
+				self.icon, self.icon_color =
+					require("nvim-web-devicons").get_icon_color(filename, extension, { default = true })
+			end,
+			provider = function(self)
+				return self.icon and (self.icon .. " ")
+			end,
+			hl = function(self)
+				return { fg = self.icon_color }
+			end,
+		}
 		local File = {
 			provider = function()
 				local name = vim.fn.expand("%:t")
@@ -221,20 +342,67 @@ return {
 			hl = { bg = nil },
 		}
 
-		local Ruler = { provider = "%7(%l:%c%)", hl = { bg = nil } }
+		FileNameBlock = utils.insert(
+			FileNameBlock,
+			FileIcon,
+			{ provider = "%<" } -- this means that the statusline is cut here when there's not enough space
+		)
+		local FileSize = {
+			provider = function()
+				-- stackoverflow, compute human readable file size
+				local suffix = { "b", "k", "M", "G", "T", "P", "E" }
+				local fsize = vim.fn.getfsize(vim.api.nvim_buf_get_name(0))
+				fsize = (fsize < 0 and 0) or fsize
+				if fsize < 1024 then
+					return fsize .. suffix[1]
+				end
+				local i = math.floor((math.log(fsize) / math.log(1024)))
+				return string.format("%.2g%s", fsize / math.pow(1024, i), suffix[i + 1])
+			end,
+		}
+		-- local Ruler = { provider = "%7(%l:%c%)", hl = { bg = nil } }
+		local Ruler = {
+			-- %l = current line number
+			-- %L = number of lines in the buffer
+			-- %c = column number
+			-- %P = percentage through file of displayed window
+			provider = "%7(%l/%3L%):%2c %P",
+		}
+		local ScrollBar = {
+			static = {
+				sbar = { "▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" },
+				-- Another variant, because the more choice the better.
+				-- sbar = { '🭶', '🭷', '🭸', '🭹', '🭺', '🭻' }
+			},
+			provider = function(self)
+				local curr_line = vim.api.nvim_win_get_cursor(0)[1]
+				local lines = vim.api.nvim_buf_line_count(0)
+				local i = math.floor((curr_line - 1) / lines * #self.sbar) + 1
+				return string.rep(self.sbar[i], 2)
+			end,
+			hl = { fg = "blue", bg = "bright_bg" },
+		}
 
 		local StatusLine = {
 			Space,
 			ViMode,
 			Space,
 			Git,
-      Space,
-      WorkDir,
+			Space,
+			Diagnostics,
+			Space,
+			WorkDir,
 			Space,
 			File,
+			Space,
+			FileNameBlock,
+			Space,
+			FileSize,
+			Space,
 			Align,
 			Ruler,
 			Space,
+			ScrollBar,
 		}
 
 		require("heirline").setup({ statusline = StatusLine, opts = { colors = colors } })
