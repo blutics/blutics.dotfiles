@@ -1,7 +1,7 @@
 local telescope_custom = require("custom.telescope_custom")
 
 vim.keymap.set("n", "<leader><leader>d", ":Alpha<CR>", { noremap = true, silent = true, desc = "Alpha Dashboard" })
-vim.keymap.set("n", "<leader><leader>k", "<Cmd>ShowkeysToggle<Cr>", { desc = "Showkeys" })
+vim.keymap.set("n", "<leader><leader>s", "<Cmd>ShowkeysToggle<Cr>", { desc = "Showkeys" })
 vim.keymap.set("n", "<leader><leader>/", "<Cmd>noh<Cr>", { desc = "Unlight highlight!" })
 vim.keymap.set(
   "n",

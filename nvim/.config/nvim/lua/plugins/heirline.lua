@@ -10,7 +10,7 @@ local ViMode = {
 	-- them at initialisation time.
 	static = {
 		mode_names = { -- change the strings if you like it vvvvverbose!
-			n = "N",
+			n = 'N',
 			no = "N?",
 			nov = "N?",
 			noV = "N?",
@@ -69,12 +69,19 @@ local ViMode = {
 	-- control the padding and make sure our string is always at least 2
 	-- characters long. Plus a nice Icon.
 	provider = function(self)
-		return " %2(" .. self.mode_names[self.mode] .. "%)"
+		local m = (self.mode_names or {})[self.mode]
+		if not m then
+			m = ""
+		end
+		return " %2(" .. m .. "%)"
 	end,
 	-- Same goes for the highlight. Now the foreground will change according to the current mode.
 	hl = function(self)
 		local mode = self.mode:sub(1, 1) -- get only the first mode character
-		return { fg = self.mode_colors[mode], bold = true }
+		return {
+			fg = self.mode_colors[mode],
+			bold = true,
+		}
 	end,
 	-- Re-evaluate the component only on ModeChanged event!
 	-- Also allows the statusline to be re-evaluated when entering operator-pending mode
@@ -91,11 +98,15 @@ return {
 	"rebelot/heirline.nvim",
 	enabled = true,
 	event = "VeryLazy",
+	init = function() end,
 	config = function()
+		vim.o.laststatus = 3
+		vim.o.cmdheight = 0
+
 		local conditions = require("heirline.conditions")
+		local heirline = require("heirline")
 		local utils = require("heirline.utils")
 
-		-- 팔레트(현재 colorscheme 색을 재사용)
 		local colors = {
 			bright_bg = utils.get_highlight("Folded").bg,
 			bright_fg = utils.get_highlight("Folded").fg,
@@ -111,10 +122,15 @@ return {
 			diag_error = utils.get_highlight("DiagnosticError").fg,
 			diag_hint = utils.get_highlight("DiagnosticHint").fg,
 			diag_info = utils.get_highlight("DiagnosticInfo").fg,
-			git_del = utils.get_highlight("diffDeleted").fg,
-			git_add = utils.get_highlight("diffAdded").fg,
-			git_change = utils.get_highlight("diffChanged").fg,
+			git_del = utils.get_highlight("GitSignsDelete").fg,
+			git_add = utils.get_highlight("GitSignsAdd").fg,
+			git_change = utils.get_highlight("GitSignsChange").fg,
+			metal_gold = "#D4AF37",
+			lavender = "#967bb6",
 		}
+		heirline.load_colors(colors)
+
+		-- 팔레트(현재 colorscheme 색을 재사용)
 
 		-- 전역 상태라인 배경 투명(선택)
 		vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
@@ -139,22 +155,6 @@ return {
 		})
 		local Diagnostics = {
 			condition = conditions.has_diagnostics,
-			-- Example of defining custom LSP diagnostic icons, you can copypaste in your config
-			-- Fetching custom diagnostic icons
-			-- error_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.ERROR],
-			-- warn_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.WARN],
-			-- info_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.INFO],
-			-- hint_icon = vim.diagnostic.config()["signs"]["text"][vim.diagnostic.severity.HINT],
-
-			-- If you defined custom LSP diagnostics with vim.fn.sign_define(), use this instead
-			-- Note defining custom LSP diagnostic this way its deprecated, though
-			--static = {
-			--    error_icon = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
-			--    warn_icon = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
-			--    info_icon = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
-			--    hint_icon = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
-			--},
-
 			init = function(self)
 				self.errors = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
 				self.warnings = #vim.diagnostic.get(0, { severity = vim.diagnostic.severity.WARN })
@@ -180,7 +180,7 @@ return {
 					end
 					return ""
 				end,
-				hl = { fg = colors.diag_error },
+				hl = { fg = "diag_error" },
 			},
 			{
 				provider = function(self)
@@ -189,7 +189,7 @@ return {
 					end
 					return ""
 				end,
-				hl = { fg = colors.diag_warn },
+				hl = { fg = "diag_warn" },
 			},
 			{
 				provider = function(self)
@@ -198,7 +198,7 @@ return {
 					end
 					return ""
 				end,
-				hl = { fg = colors.diag_info },
+				hl = { fg = "diag_info" },
 			},
 			{
 				provider = function(self)
@@ -207,7 +207,7 @@ return {
 					end
 					return ""
 				end,
-				hl = { fg = colors.diag_hint },
+				hl = { fg = "diag_hint" },
 			},
 			{
 				provider = "",
@@ -223,7 +223,7 @@ return {
 					or self.status_dict.changed ~= 0
 			end,
 
-			hl = { fg = colors.orange },
+			hl = { fg = "orange" },
 
 			{ -- git branch name
 				provider = function(self)
@@ -243,21 +243,21 @@ return {
 					local count = self.status_dict.added or 0
 					return count > 0 and ("+" .. count)
 				end,
-				hl = { fg = colors.git_add },
+				hl = { fg = "git_add" },
 			},
 			{
 				provider = function(self)
 					local count = self.status_dict.removed or 0
 					return count > 0 and ("-" .. count)
 				end,
-				hl = { fg = colors.git_del },
+				hl = { fg = "git_del" },
 			},
 			{
 				provider = function(self)
 					local count = self.status_dict.changed or 0
 					return count > 0 and ("~" .. count)
 				end,
-				hl = { fg = colors.git_change },
+				hl = { fg = "git_change" },
 			},
 			{
 				condition = function(self)
@@ -285,15 +285,20 @@ return {
 					local path = require("custom.root").get_root_detail(self.file_dir)
 					-- vim.notify("x :", path.shorten_relative)
 					-- print(path.root_path, path.file_path)
-					return self.icon .. path.root_name .. " * " .. path.shorten_relative .. " *"
+					if path.shorten_relative == nil then
+						path.shorten_relative = ""
+					end
+					local shortened = path.shorten_relative ~= "" and " * " .. path.shorten_relative or ""
+					return self.icon .. path.root_name .. shortened
 				end,
+				hl = { fg = "lavender" },
 			},
 			{
 				-- evaluates to the shortened path
 				provider = function(self)
 					-- print("2")
 					local path = require("custom.root").get_root_detail(self.cwd)
-					return self.icon .. path.shorten_relative .. " "
+					return self.icon .. " !!! "
 				end,
 			},
 			{
@@ -337,9 +342,9 @@ return {
 		local File = {
 			provider = function()
 				local name = vim.fn.expand("%:t")
-				return (name == "" and "[No Name]" or name)
+				return (name == "" and "[No Name]" or "* " .. name)
 			end,
-			hl = { bg = nil },
+			hl = { fg = "gray", bg = nil },
 		}
 
 		FileNameBlock = utils.insert(
@@ -359,6 +364,23 @@ return {
 				local i = math.floor((math.log(fsize) / math.log(1024)))
 				return string.format("%.2g%s", fsize / math.pow(1024, i), suffix[i + 1])
 			end,
+		}
+		local LSPActive = {
+			condition = conditions.lsp_attached,
+			update = { "LspAttach", "LspDetach" },
+
+			-- You can keep it simple,
+			-- provider = " [LSP]",
+
+			-- Or complicate things a bit and get the servers names
+			provider = function()
+				local names = {}
+				for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+					table.insert(names, server.name)
+				end
+				return " [" .. table.concat(names, " ") .. "]"
+			end,
+			hl = { fg = "green", bold = true },
 		}
 		-- local Ruler = { provider = "%7(%l:%c%)", hl = { bg = nil } }
 		local Ruler = {
@@ -382,7 +404,47 @@ return {
 			end,
 			hl = { fg = "blue", bg = "bright_bg" },
 		}
+		local SearchCount = {
+			condition = function()
+				-- vim.o.cmdheight -> command라인의 줄 수!
+				-- 이 값이 0이면 평소에는 statusline만 보이고
+				-- :입력시에 statusline이 없어지고 cmdline만 보인다
+				-- 이게 세팅이 되어야지 아래의 세팅이 작동한다
+				-- 그게 아니라면 vim.o.cmdheight ~= 0을 없애면 된다
+				-- 안되는데? 그냥 vim.o.cmdheight ~= 0이 없어야 작동....
+				-- vim.o.cmdheight = 0 -> 세팅이 좋네. 한번씩 검색하고 있는지 아닌지 구분이 안가는 경우가 많은데
+				-- 검색을 입력할 때는 완전히 statusline이 안보이니 확실히 구분이 된다.
+				return vim.v.hlsearch ~= 0
+			end,
+			init = function(self)
+				local ok, search = pcall(vim.fn.searchcount)
+				if ok and search.total then
+					self.search = search
+				end
+			end,
+			provider = function(self)
+				local search = self.search
+				return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
+			end,
+		}
 
+		local MacroRec = {
+			condition = function()
+				return vim.fn.reg_recording() ~= "" and vim.o.cmdheight == 0
+			end,
+			provider = " ",
+			hl = { fg = "orange", bold = true },
+			utils.surround({ "[", "]" }, nil, {
+				provider = function()
+					return vim.fn.reg_recording()
+				end,
+				hl = { fg = "green", bold = true },
+			}),
+			update = {
+				"RecordingEnter",
+				"RecordingLeave",
+			},
+		}
 		local StatusLine = {
 			Space,
 			ViMode,
@@ -399,12 +461,19 @@ return {
 			Space,
 			FileSize,
 			Space,
+			SearchCount,
+      Space,
+      MacroRec,
 			Align,
+
+
+			LSPActive,
+			Space,
 			Ruler,
 			Space,
 			ScrollBar,
 		}
 
-		require("heirline").setup({ statusline = StatusLine, opts = { colors = colors } })
+		heirline.setup({ statusline = StatusLine })
 	end,
 }

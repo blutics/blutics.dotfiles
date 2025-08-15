@@ -64,7 +64,7 @@ return {
         end, { "i", "s" }),
       }),
       sources = {
-        { name = "obsidian" },
+        -- { name = "obsidian" },
         { name = "nvim_lsp" },
         { name = "nvim_lua" },
         { name = "luasnip" },
@@ -118,10 +118,9 @@ return {
         end,
       },
       experimental = {
-        ghost_text = true,
+        ghost_text = false,
       },
     })
-
     -- ["<leader>z"] = cmp.mapping.complete(),
     -- vim.keymap.set("n", "<leader>z", cmp.mapping.complete, { desc = "Auto Complete" })
   end,

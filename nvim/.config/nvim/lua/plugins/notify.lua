@@ -2,6 +2,7 @@ return {
   "rcarriga/nvim-notify",
   priority = 1000,
   lazy = false,
+  enabled=false,
 
   keys = {
     {
