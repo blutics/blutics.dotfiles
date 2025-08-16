@@ -27,7 +27,6 @@ function M.get_project_directories(callback)
 	-- 루트 디렉토리 아래의  폴더를 선택 후 해당 디렉토리를 바탕으로 callback으로 특정 작업 진행하기
 	--
 	local root_dir = vim.fn.getcwd()
-	print("selected path ->", root_dir)
 	require("telescope").extensions.file_browser.file_browser({
 		prompt_title = "Create Note in Current Vault",
 		cwd = root_dir,
@@ -48,7 +47,6 @@ function M.get_project_directories(callback)
 
 				local relative_path = string.sub(selection.path, #root_dir + 2) -- string.sub -> (a, b) 문자열 a를 index b부터 잘라서 리턴한다.
 				local abs_path = root_dir .. "/" .. relative_path
-				print(abs_path)
 				callback(abs_path)
 			end
 			map("i", "<CR>", create_note)

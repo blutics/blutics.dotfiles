@@ -3,24 +3,21 @@
 -- wilder는 cmdline과 / 검색에서!
 return {
 	-- 1) fzy 가속기
-	{
-		"romgrk/fzy-lua-native",
-		build = "make", -- Linux/macOS
-		-- Windows라면 미설치 가능: 없으면 자동으로 기본 경로 사용
-		optional = true,
-	},
 	-- 2) Wilder (Lua 전용 구성)
 	{
 		"gelguy/wilder.nvim",
 		event = "CmdlineEnter",
 		enabled = true,
 		dependencies = {
-			"romgrk/fzy-lua-native",
+			{ "romgrk/fzy-lua-native" },
 			{ "nvim-tree/nvim-web-devicons", optional = true },
 		},
 		config = function()
 			local wilder = require("wilder")
-			wilder.setup({ modes = { ":", "/", "?" }, use_python_remote_plugin = 0 })
+			wilder.setup({ modes = { ":", "/", "?" } })
+			wilder.set_option("use_python_remote_plugin", 0)
+			-- 이 옵션이 github 메인에 있음
+			-- 근데 gpt에서는 계속 setup에 넣으라고 나온다 -> 안됨.
 
 			-- fzy 네이티브가 있으면 가속, 없으면 기본으로 폴백
 			local ok = pcall(require, "fzy_lua_native")
@@ -34,8 +31,8 @@ return {
 						fuzzy = 1,
 						fuzzy_filter = wilder.lua_fzy_filter(),
 					}),
-					-- wilder.search_pipeline()
-          wilder.vim_search_pipeline()
+					wilder.search_pipeline()
+					-- wilder.vim_search_pipeline()
 				),
 			})
 

@@ -15,10 +15,10 @@ function M.custom_telescope_maker()
           local dir_path = input:sub(1, -2)
           local escaped = vim.fn.fnameescape(dir_path)
           local fullpath = path .. "/" .. escaped
-          print("Created directory: " .. fullpath)
+          -- print("Created directory: " .. fullpath)
           vim.fn.mkdir(fullpath, "p")
         else
-          print("Created File: " .. input)
+          -- print("Created File: " .. input)
           vim.cmd("edit " .. path .. "/" .. vim.fn.fnameescape(input))
         end
       end
