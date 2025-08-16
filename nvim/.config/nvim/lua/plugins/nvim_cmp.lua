@@ -2,12 +2,12 @@ return {
   "hrsh7th/nvim-cmp",
   event = "InsertEnter",
   dependencies = {
-    "hrsh7th/cmp-nvim-lsp",   -- LSP completion
-    "hrsh7th/cmp-nvim-lua",   -- Lua completion
-    "hrsh7th/cmp-buffer",     -- buffer completion
-    "hrsh7th/cmp-path",       -- path completion
-    "saadparwaiz1/cmp_luasnip", -- snippet completion
-    "L3MON4D3/LuaSnip",       -- snippet engine
+    { "hrsh7th/cmp-nvim-lsp", commit = "a8912b88ce488f411177fc8aed358b04dc246d7b" }, -- LSP completion
+    "hrsh7th/cmp-nvim-lua",                                                        -- Lua completion
+    "hrsh7th/cmp-buffer",                                                          -- buffer completion
+    "hrsh7th/cmp-path",                                                            -- path completion
+    "saadparwaiz1/cmp_luasnip",                                                    -- snippet completion
+    "L3MON4D3/LuaSnip",                                                            -- snippet engine
   },
   config = function()
     local cmp = require("cmp")
