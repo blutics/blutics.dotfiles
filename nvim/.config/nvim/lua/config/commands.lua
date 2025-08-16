@@ -55,6 +55,12 @@ end, { nargs = 1 })
 --
 --
 
-
-
-
+vim.api.nvim_create_user_command("MessagesBuf", function()
+	local lines = vim.split(vim.fn.execute("messages"), "\n", { plain = true })
+	vim.cmd("botright new")
+	local buf = vim.api.nvim_get_current_buf()
+	vim.bo[buf].buftype, vim.bo[buf].bufhidden, vim.bo[buf].swapfile, vim.bo[buf].filetype =
+		"nofile", "wipe", false, "log"
+	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	vim.bo[buf].modifiable = false
+end, {})

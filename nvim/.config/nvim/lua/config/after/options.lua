@@ -28,5 +28,5 @@ vim.cmd([[hi vCursor guibg=black guifg=white]])
 
 vim.cmd([[hi TelescopeSelection guibg=#2F3A40]]) -- 텔레스콥에서 현재 커서가 있는 라인의 색
 
-vim.cmd([[ShowkeysToggle]])
+-- vim.cmd([[ShowkeysToggle]])
 

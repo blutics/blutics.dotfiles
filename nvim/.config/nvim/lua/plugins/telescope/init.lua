@@ -31,6 +31,7 @@ return {
     priority = 700,
     dependencies = {
       "nvim-lua/plenary.nvim",
+      "j-hui/fidget.nvim",
       { "ahmedkhalf/project.nvim" },
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = function() return vim.fn.executable("make") == 1 end, },
       { "nvim-telescope/telescope-file-browser.nvim" },
@@ -136,6 +137,7 @@ return {
 
       -- telescope.load_extension("fzf")telescope
       telescope.load_extension("projects")
+      telescope.load_extension("fidget")
       -- telescope.load_extension("noice")
     end,
   },
