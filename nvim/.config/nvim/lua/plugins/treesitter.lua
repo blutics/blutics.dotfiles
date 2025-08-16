@@ -90,12 +90,6 @@ return {
 						},
 					},
 				},
-				move = { -- 다음/이전 인수·블록으로 점프
-					enable = true,
-					set_jumps = true,
-					goto_next_start = { ["]a"] = "@parameter.outer", ["]b"] = "@block.outer" },
-					goto_previous_start = { ["[a"] = "@parameter.outer", ["[b"] = "@block.outer" },
-				},
 			})
 		end,
 	},
