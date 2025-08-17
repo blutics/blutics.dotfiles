@@ -20,9 +20,6 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "To Normal Mode" })
 vim.keymap.set("n", "<leader>o", "<Cmd>Portal jumplist backward<Cr>", { desc = "Portal backward" })
 vim.keymap.set("n", "<leader>i", "<Cmd>Portal jumplist forward<Cr>", { desc = "Portal forward" })
 
-local map = vim.api.nvim_set_keymap
-local opts = { noremap = true, silent = true }
-
 local todo_custom = require("custom.todo_custom_comment")
 
 vim.keymap.set("n", "<leader>/t", function()

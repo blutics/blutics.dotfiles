@@ -1,6 +1,6 @@
 return {
   "echasnovski/mini.move",
-  version = false, -- 최신 버전 사용
+  -- version = false, -- 최신 버전 사용
   config = function()
     require("mini.move").setup({
       -- 매핑 설정

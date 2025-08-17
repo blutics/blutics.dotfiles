@@ -94,6 +94,8 @@ local ViMode = {
 	},
 }
 
+-- 한번 search하고 나서 nvim을 껐다 켜야지 heirline이 그때부터 작동한다.
+-- 이것도 lsp들을 자동으로 설치하지 않아서 발생하는 문제 아닌가?
 return {
 	"rebelot/heirline.nvim",
 	enabled = true,

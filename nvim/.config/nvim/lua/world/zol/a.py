@@ -8,12 +8,14 @@ def hello_world(a, b, c):
 import requests
 
 
+
 # res = requests.get("https://www.naver.com")
 res = requests.post("https://www.google.com")
 
+import json
+
 
 a = 19
-
 
 for i in range(500):
     print("hello world :", i)
