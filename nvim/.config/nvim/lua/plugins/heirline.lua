@@ -10,7 +10,7 @@ local ViMode = {
 	-- them at initialisation time.
 	static = {
 		mode_names = { -- change the strings if you like it vvvvverbose!
-			n = 'N',
+			n = "N",
 			no = "N?",
 			nov = "N?",
 			noV = "N?",
@@ -367,23 +367,6 @@ return {
 				return string.format("%.2g%s", fsize / math.pow(1024, i), suffix[i + 1])
 			end,
 		}
-		local LSPActive = {
-			condition = conditions.lsp_attached,
-			update = { "LspAttach", "LspDetach" },
-
-			-- You can keep it simple,
-			-- provider = " [LSP]",
-
-			-- Or complicate things a bit and get the servers names
-			provider = function()
-				local names = {}
-				for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
-					table.insert(names, server.name)
-				end
-				return " [" .. table.concat(names, " ") .. "]"
-			end,
-			hl = { fg = "green", bold = true },
-		}
 		-- local Ruler = { provider = "%7(%l:%c%)", hl = { bg = nil } }
 		local Ruler = {
 			-- %l = current line number
@@ -447,6 +430,35 @@ return {
 				"RecordingLeave",
 			},
 		}
+
+		local LSPActive = {
+			condition = conditions.lsp_attached,
+			update = { "LspAttach", "LspDetach" },
+
+			-- You can keep it simple,
+			-- provider = " [LSP]",
+
+			-- Or complicate things a bit and get the servers names
+			provider = function()
+				local names = {}
+				for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+					table.insert(names, server.name)
+				end
+				return " [" .. table.concat(names, " ") .. "]"
+			end,
+			hl = { fg = "green", bold = true },
+		}
+		local nls = require("custom.null_ls_names")
+
+		local NullLSNames = {
+			condition = function()
+				return #vim.lsp.get_clients({ bufnr = 0, name = "null-ls" }) > 0
+			end,
+			provider = function()
+				return nls.list(0)
+			end,
+			hl = { fg = "cyan" },
+		}
 		local StatusLine = {
 			Space,
 			ViMode,
@@ -464,12 +476,12 @@ return {
 			FileSize,
 			Space,
 			SearchCount,
-      Space,
-      MacroRec,
+			Space,
+			MacroRec,
 			Align,
 
-
 			LSPActive,
+			NullLSNames,
 			Space,
 			Ruler,
 			Space,

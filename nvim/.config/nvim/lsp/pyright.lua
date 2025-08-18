@@ -43,7 +43,7 @@ return {
       analysis = {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
-        diagnosticMode = "openFilesOnly",
+        -- diagnosticMode = "openFilesOnly",
         typeCheckingMode = "basic",
         reportUnusedImport = "none",
         reportUnusedVariable = "none",
