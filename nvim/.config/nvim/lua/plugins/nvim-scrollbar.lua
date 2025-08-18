@@ -1,7 +1,7 @@
 return {
 	"petertriho/nvim-scrollbar",
 	event = "BufReadPost",
-	enabled = false,
+	enabled = true,
 	dependencies = {
 		"kevinhwang91/nvim-hlslens", -- 검색 하이라이트(선택)
 		"lewis6991/gitsigns.nvim", -- Git 변경 표시(선택)

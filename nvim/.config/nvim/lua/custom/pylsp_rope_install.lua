@@ -28,9 +28,9 @@ local function ensure_rope_in_pylsp()
   -- 이미 있는지 먼저 확인
   vim.system({ pip, "show", "pylsp-rope" }, { text = true }, function(show)
     if show.code == 0 then
-      vim.schedule(function()
-        vim.notify("pylsp-rope already installed in Mason pylsp venv", vim.log.levels.INFO)
-      end)
+      -- vim.schedule(function()
+      --   vim.notify("pylsp-rope already installed in Mason pylsp venv", vim.log.levels.INFO)
+      -- end)
       return
     end
     vim.schedule(function()
