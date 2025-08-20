@@ -15,4 +15,5 @@ require("config.lsp")
 
 
 require("config.after.options")
+require("config.after.virtual-diagnostics-texts")
 

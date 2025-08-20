@@ -9,10 +9,10 @@ return {
 		local wk = require("which-key")
 
 		wk.setup({
-			window = {
-				border = "single", -- 창 테두리 스타일
-				position = "bottom", -- 위치 ("bottom", "top")
-			},
+			-- win = {
+				-- border = "single", -- 창 테두리 스타일
+				-- position = "bottom", -- 위치 ("bottom", "top")
+			-- },
 			layout = {
 				height = { min = 4, max = 25 }, -- 최소/최대 높이
 				width = { min = 20, max = 50 }, -- 최소/최대 너비
@@ -29,26 +29,31 @@ return {
 		})
 
 		-- 키 매핑 등록 예시
-		wk.register({
-			-- 일반적인 매핑
-			["<leader>"] = {
-				x = {
-					name = "Trouble",
-					icon = "🖨️",
-				},
-				t = {
-					name = "NeoTest",
-					icon = "🧪",
-				},
-				O = {
-					name = "Overseer",
-					icon = "🛠️",
-				},
-				["<leader>"] = {
-					name = "Leader",
-					icon = "👾",
-				},
-			},
+		wk.add({
+			--{ 일반적인 매핑
+
+			{ "<leader>", group = "Leader", icon = "👾" },
+			{ "<leader>O", group = "Overseer", icon = "🛠️" },
+			{ "<leader>t", group = "NeoTest", icon = "🧪" },
+			{ "<leader>x", group = "Trouble", icon = "🖨️" },
+			-- ["<leader>"] = {
+			-- 	x = {
+			-- 		name = "Trouble",
+			-- 		icon = "🖨️",
+			-- 	},
+			-- 	t = {
+			-- 		name = "NeoTest",
+			-- 		icon = "🧪",
+			-- 	},
+			-- 	O = {
+			-- 		name = "Overseer",
+			-- 		icon = "🛠️",
+			-- 	},
+			-- 	["<leader>"] = {
+			-- 		name = "Leader",
+			-- 		icon = "👾",
+			-- 	},
+			-- },
 
 			-- 비주얼 모드 매핑
 			-- ["<leader>"] = {

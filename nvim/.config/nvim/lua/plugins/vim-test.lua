@@ -1,5 +1,6 @@
 return {
 	"vim-test/vim-test",
+  enabled=false,
 	-- dependencies = { "preservim/vimux" }, -- 선택적: tmux 통합
 	config = function()
 		-- 테스트 실행 전략 설정

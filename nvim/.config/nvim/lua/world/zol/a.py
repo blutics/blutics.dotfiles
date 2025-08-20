@@ -13,13 +13,13 @@ import requests
 res = requests.post("https://www.google.com")
 
 import json
-
-
+mport xxx
+import xxx
 a = 19
 
-for i in range(500):
-    print("hello world :", i)
-    time.sleep(1)
+for i in/ + range(500):
+    p rint("hello world :", i)
+ time.sleep(1)
     for j in range(5):
         print("go!", j)
         time.sleep(0.3)

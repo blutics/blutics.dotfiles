@@ -64,3 +64,13 @@ vim.api.nvim_create_user_command("MessagesBuf", function()
 	vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
 	vim.bo[buf].modifiable = false
 end, {})
+
+vim.api.nvim_create_user_command("LintInfo", function()
+	local info = require("custom.nvim-lint-info")
+	local lines = info.build_lines(0, {
+		-- 필요 시 fallback/global 포함하려면 켜기:
+		-- include_fallback = true,
+		-- include_global = true,
+	})
+	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO, { title = "nvim-lint · LintInfo" })
+end, {})

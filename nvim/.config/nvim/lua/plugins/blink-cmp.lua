@@ -27,7 +27,7 @@ return {
     },
     signature = {
       enabled = true,
-      window = { border = 'single', },
+      window = { border = "single" },
     },
 
     sources = {
@@ -37,4 +37,26 @@ return {
     fuzzy = { implementation = "prefer_rust_with_warning" },
   },
   opts_extend = { "sources.default" },
+  init = function()
+    local ok, cmp = pcall(require, "blink.cmp")
+
+    -- 문서: <leader>gK
+    vim.keymap.set({ "i", "n" }, "<leader>gK", function()
+      if ok and vim.fn.mode() == "i" then
+        print("-----")
+        cmp.show_documentation() -- blink 문서창
+      else
+        vim.lsp.buf.hover()  -- LSP hover
+      end
+    end, { desc = "Docs (blink in insert; otherwise LSP)" })
+
+    -- 시그니처: <leader>gk
+    vim.keymap.set({ "i", "n" }, "<leader>gk", function()
+      if ok and vim.fn.mode() == "i" then
+        cmp.show_signature()     -- blink 시그니처
+      else
+        vim.lsp.buf.signature_help() -- LSP signature
+      end
+    end, { desc = "Signature (blink in insert; otherwise LSP)" })
+  end,
 }

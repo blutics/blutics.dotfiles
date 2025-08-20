@@ -12,6 +12,7 @@ return {
     "antosha417/nvim-lsp-file-operations",
   },
   config = function()
+    print("!!!!!")
     -- mason 설정
     require("mason").setup()
     require("mason-lspconfig").setup({

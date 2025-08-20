@@ -1,7 +1,7 @@
 local telescope_custom = require("custom.telescope_custom")
 
 vim.keymap.set("n", "<leader>f", "", { desc = "Telescope!" })
-vim.keymap.set("n", "<leader>ff", "<Cmd>Telescope find_files<Cr>", { desc = "Find files" })
+-- vim.keymap.set("n", "<leader>ff", "<Cmd>Telescope find_files<Cr>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", "<Cmd>Telescope current_buffer_fuzzy_find<Cr>", { desc = "Current buffer fuzzy" })
 vim.keymap.set("n", "<leader>fG", "<Cmd>Telescope live_grep<Cr>", { desc = "Live grep" })
 vim.keymap.set("n", "<leader>fh", "<Cmd>Telescope help_tags<Cr>", { desc = "Help tags" })
@@ -14,26 +14,21 @@ vim.keymap.set("n", "<leader>fd", telescope_custom.custom_telescope_diagnostics,
 vim.keymap.set("n", "<leader>fD", "<Cmd>TodoTelescope<Cr>", { desc = "TODOs" })
 vim.keymap.set("n", "<leader>fj", telescope_custom.custom_telescope_jumplist, { desc = "Jumplist" })
 vim.keymap.set("n", "<leader>fe", telescope_custom.custom_telescope_maker, { desc = "Make file or directory" })
+vim.keymap.set("n", "<leader>fc", telescope_custom.custom_telescope_command_history, { desc = "Command history" })
 vim.keymap.set(
-  "n",
-  "<leader>fc",
-  telescope_custom.custom_telescope_command_history,
-  { desc = "Command history" }
-)
-vim.keymap.set(
-  "n",
-  "<leader>fp",
-  telescope_custom.custom_telescope_projects,
-  { noremap = true, silent = true, desc = "Find projects" }
+	"n",
+	"<leader>fp",
+	telescope_custom.custom_telescope_projects,
+	{ noremap = true, silent = true, desc = "Find projects" }
 )
 vim.keymap.set("n", "<leader>fP", function()
-  local path = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
-  local custom_common = require("custom.common")
-  custom_common.select_a_subdir(path, "Select a nvim plugin as a Project", function(dirname)
-    local target_path = path .. "/" .. dirname
-    vim.cmd("cd " .. target_path)
-    require("telescope.builtin").find_files({
-      cwd = target_path,
-    })
-  end)
+	local path = vim.fs.joinpath(vim.fn.stdpath("data"), "lazy")
+	local custom_common = require("custom.common")
+	custom_common.select_a_subdir(path, "Select a nvim plugin as a Project", function(dirname)
+		local target_path = path .. "/" .. dirname
+		vim.cmd("cd " .. target_path)
+		require("telescope.builtin").find_files({
+			cwd = target_path,
+		})
+	end)
 end, { desc = "Vim Plugins" })

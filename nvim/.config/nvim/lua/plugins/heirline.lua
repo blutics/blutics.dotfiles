@@ -444,9 +444,64 @@ return {
 				for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
 					table.insert(names, server.name)
 				end
-				return " [" .. table.concat(names, " ") .. "]"
+				return "[" .. table.concat(names, " ") .. "]"
 			end,
 			hl = { fg = "green", bold = true },
+		}
+		--  ConformActive ─ 지금 버퍼에서 "실제로 실행될" 포매터 체인(+LSP 여부)
+		local ConformActive = {
+			condition = function()
+				local ok, conform = pcall(require, "conform")
+				if not ok then
+					return false
+				end
+				local avail = conform.list_formatters and conform.list_formatters(0) or {}
+				return avail and #avail > 0
+			end,
+			-- 파일타입/버퍼 전환, 저장 직전 등에 갱신
+			update = { "BufEnter", "FileType", "BufWritePre", "LspAttach", "LspDetach" },
+			provider = function()
+				local conform = require("conform")
+				local infos, use_lsp = conform.list_formatters_to_run(0) -- 정확히 무엇이 돌지
+				local names = {}
+				for _, it in ipairs(infos or {}) do
+					table.insert(names, it.name or "?")
+				end
+				-- 아이콘은 취향대로: "" (가위) / "" (붓) 등
+				return ("[%s%s]"):format(
+					(#names > 0) and table.concat(names, " ") or "none",
+					use_lsp and " +LSP" or ""
+				)
+			end,
+			hl = { fg = "#FFA673", bold = true },
+		}
+
+		--  LintActive ─ nvim-lint: "지금 돌고 있는" 린터가 있으면 그걸, 없으면 구성된 린터를
+		local LintActive = {
+			condition = function()
+				local ok, lint = pcall(require, "lint")
+				if not ok then
+					return false
+				end
+				local ft = vim.bo.filetype
+				local configured = (lint.linters_by_ft and lint.linters_by_ft[ft]) or {}
+				local running = (type(lint.get_running) == "function") and (lint.get_running(0) or {}) or {}
+				return (#configured > 0) or (#running > 0)
+			end,
+			-- nvim-lint는 보통 저장/입력종료/버퍼진입에서 돌리니 그 타이밍에 갱신
+			update = { "BufEnter", "BufReadPost", "InsertLeave", "BufWritePost" },
+			provider = function()
+				local lint = require("lint")
+				local running = (type(lint.get_running) == "function") and (lint.get_running(0) or {}) or {}
+				local names, icon
+				if #running > 0 then
+					names, icon = running, "󱉶" -- running
+				else
+					names, icon = (lint.linters_by_ft[vim.bo.filetype] or {}), "󰦕" -- idle
+				end
+				return ("[%s]"):format((#names > 0) and table.concat(names, " ") or "none")
+			end,
+			hl = { fg = "#FFCB61", bold = true },
 		}
 		local nls = require("custom.null_ls_names")
 
@@ -481,6 +536,8 @@ return {
 			Align,
 
 			LSPActive,
+      ConformActive,
+      LintActive,
 			NullLSNames,
 			Space,
 			Ruler,

@@ -1,5 +1,15 @@
+-- none-ls를 그냥 쓰려는데 사실 크게 문제는 없었다.
+-- 찾아보니 상세한 설정이 없어서 별로라는 사람들도 있기는 한데
+-- 나한테는 크게 문제는 없었다.
+-- 근데 eslint에서 문제가 발생하네....
+-- 사실 이것도 none-ls의 문제는 아님
+-- 문제라면 문제일까?? none-ls가 eslint를 지원하지 않는다는 문제??
+-- 그럼에도 불구하고 null-ls에서 메인테이너가 포기한 repo
+-- 그리고 vim계의 아이돌 folke가 confirm + nvim-lint로 간다고 하네
+-- 찾아보니 confirm은 포맷팅을 nvim-lint는 린팅을 지원해주는 것 같음.
 return {
   "nvimtools/none-ls.nvim",
+  enabled=false,
   dependencies = {
     "nvim-lua/plenary.nvim", -- null-ls 실행에 필요한 라이브러리
   },
@@ -23,6 +33,9 @@ return {
         },
       }),
 
+      -- Linting
+      -- null_ls.builtins.diagnostics.eslint, -- JS/TS
+
       -- YAML 린터
       null_ls.builtins.diagnostics.yamllint.with({
         -- yamllint 설정 커스터마이징
@@ -42,7 +55,6 @@ return {
       }),
 
       -- Python 린터
-      -- null_ls.builtins.diagnostics.ruff,
       null_ls.builtins.diagnostics.pylint.with({
         cwd = require("custom.root").find_for_lsp,
         -- prefer_local = ".venv/bin",
@@ -50,9 +62,6 @@ return {
       }),
 
       null_ls.builtins.formatting.stylua, -- Lua
-
-      -- Linting
-      -- null_ls.builtins.diagnostics.eslint, -- JS/TS
 
       -- Code actions
       -- Python 코드 액션
