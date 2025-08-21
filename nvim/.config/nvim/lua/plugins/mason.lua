@@ -18,6 +18,7 @@ return {
 					"ts_ls", -- TypeScript/JavaScript
 					"html",
 					"cssls",
+          "tailwindcss",
 
 					"pyright",
 					"pylsp",
@@ -26,20 +27,7 @@ return {
 					"nil_ls",
 				},
 				automatic_installation = true, -- 누락 시 자동 설치
-				handlers = {}, -- lspconfig 자동 setup 방지 (설치만)
 			}
-		end,
-		config = function(_, opts)
-			require("mason-lspconfig").setup(opts)
-			-- (선택) pylsp venv에 rope 주입
-			vim.defer_fn(function()
-				local ok, mr = pcall(require, "mason-registry")
-				if ok and mr.is_installed("python-lsp-server") then
-					pcall(function()
-						require("custom.pylsp_rope_install").ensure_rope_in_pylsp()
-					end)
-				end
-			end, 1500)
 		end,
 	},
 	-- Mason-Null-LS (Mason/none-ls 의존)

@@ -1,3 +1,6 @@
+local make_prettier_related_options = function()
+	return { "prettier", stop_after_first = true }
+end
 return {
 	{
 		"zapling/mason-conform.nvim",
@@ -30,14 +33,14 @@ return {
 			formatters_by_ft = {
 				lua = { "stylua" },
 				python = { "isort", "black" },
-				typescript = { "prettierd", "prettier", stop_after_first = true },
-				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
-				javascript = { "prettierd", "prettier", stop_after_first = true },
-				javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-				json = { "prettierd", "prettier", stop_after_first = true },
-				css = { "prettierd", "prettier", stop_after_first = true },
-				html = { "prettierd", "prettier", stop_after_first = true },
-				markdown = { "prettierd", "prettier", stop_after_first = true },
+				typescript = make_prettier_related_options(),
+				typescriptreact = make_prettier_related_options(),
+				javascript = make_prettier_related_options(),
+				javascriptreact = make_prettier_related_options(),
+				json = make_prettier_related_options(),
+				css = make_prettier_related_options(),
+				html = make_prettier_related_options(),
+				markdown = make_prettier_related_options(),
 				nix = { "alejandra" },
 			},
 			formatters = {
@@ -49,11 +52,21 @@ return {
 						PRETTIERD_LOCAL_PRETTIER_ONLY = "1",
 					},
 				},
+				prettier = {
+					prepend_args = function(ctx)
+						-- local ft = vim.bo[ctx.bufnr].filetype
+						local args = { "--single-quote", "--no-semi", "--use-tabs", "--tab-width", "2" , "--yaml-parser", "yaml"}
+						-- if ft == "yaml" or ft == "yml" then
+						-- 	vim.list_extend(args, { "--parser", "yaml" }) -- (--yaml-parser 아님)
+						-- end
+						return args
+					end,
+				},
 			},
 		},
-		init = function()
-			-- If you want the formatexpr, here is the place to set it
-			vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-		end,
+		-- init = function()
+		-- 	-- If you want the formatexpr, here is the place to set it
+		-- 	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+		-- end,
 	},
 }

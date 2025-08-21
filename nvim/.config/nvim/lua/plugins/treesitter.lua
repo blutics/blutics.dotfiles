@@ -81,7 +81,7 @@ return {
 							["if"] = "@function.inner",
 							["ae"] = "@call.outer",
 							["ie"] = "@call.inner",
-							["ac"] = "@class.outer",
+							["cc"] = "@class.outer",
 							["ic"] = "@class.inner",
 							["a/"] = "@comment.outer",
 							["i/"] = "@comment.inner",
