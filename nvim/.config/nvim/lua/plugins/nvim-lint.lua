@@ -2,7 +2,7 @@
 return {
 	{
 		"mfussenegger/nvim-lint",
-		dependencies = { "rshkarin/mason-nvim-lint" },
+		dependencies = { "WhoIsSethDaniel/mason-tool-installer.nvim" },
 		event = { "BufReadPost", "BufNewFile" },
 		config = function()
 			local lint = require("lint")
@@ -38,13 +38,5 @@ return {
 			-- 	lint.try_lint()
 			-- end, { desc = "Run linters" })
 		end,
-	},
-	{
-		"rshkarin/mason-nvim-lint",
-		dependencies = { "williamboman/mason.nvim" },
-		opts = {
-			automatic_installation = true,
-			ensure_installed = { "ruff" },
-		},
 	},
 }

@@ -6,56 +6,34 @@ return {
 		config = true, -- 기본 setup()
 	},
 	{
-		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim" },
-		-- LSP “서버 키”를 나열합니다 (패키지명이 아님)
-		opts = function()
-			return {
-        PATH = "prepend",
-				ensure_installed = {
-					"lua_ls",
-
-					"ts_ls", -- TypeScript/JavaScript
-					"html",
-					"cssls",
-          "tailwindcss",
-
-					"pyright",
-					"pylsp",
-					"yamlls",
-					"marksman",
-					"nil_ls",
-				},
-				automatic_installation = true, -- 누락 시 자동 설치
-			}
-		end,
-	},
-	-- Mason-Null-LS (Mason/none-ls 의존)
-	{
-		"jay-babu/mason-null-ls.nvim",
-    enabled=false,
-		-- event = "VeryLazy",
-		dependencies = {
-			"williamboman/mason.nvim",
-			-- "nvimtools/none-ls.nvim",
-		},
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		dependencies = {},
 		opts = {
+			automatic_installation = true,
 			ensure_installed = {
-				"black", -- 포매터
-				"isort", -- import 정렬
-				"ruff", -- 린터
-				"pylint",
-				"mypy",
-				"yamllint",
-				-- "prettier",
-				"stylua",
-				"eslint",
-				"alejandra", -- nix formatter
-				"markdownlint",
-				-- 필요하다면 "mypy" 등도 추가 가능 (CLI가 존재하는 도구)
-			},
+				"lua-language-server",
 
-			automatic_installation = true, -- 원하면
+				"typescript-language-server", -- TypeScript/JavaScript
+				"html-lsp",
+				"css-lsp",
+				"tailwindcss-language-server",
+
+				"pyright",
+        "black",
+        "isort",
+        "ruff",
+
+				"yaml-language-server",
+				"marksman",
+				"nil",
+				"eslint_d",
+
+        "prettier",
+        "prettierd",
+
+        "stylua",
+        "alejandra",
+			},
 		},
 	},
 }

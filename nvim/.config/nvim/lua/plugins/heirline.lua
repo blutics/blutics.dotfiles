@@ -409,6 +409,9 @@ return {
 			end,
 			provider = function(self)
 				local search = self.search
+        if not search then
+          return ""
+        end
 				return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
 			end,
 		}
@@ -503,17 +506,6 @@ return {
 			end,
 			hl = { fg = "#FFCB61", bold = true },
 		}
-		local nls = require("custom.null_ls_names")
-
-		local NullLSNames = {
-			condition = function()
-				return #vim.lsp.get_clients({ bufnr = 0, name = "null-ls" }) > 0
-			end,
-			provider = function()
-				return nls.list(0)
-			end,
-			hl = { fg = "cyan" },
-		}
 		local StatusLine = {
 			Space,
 			ViMode,
@@ -538,7 +530,6 @@ return {
 			LSPActive,
       ConformActive,
       LintActive,
-			NullLSNames,
 			Space,
 			Ruler,
 			Space,
