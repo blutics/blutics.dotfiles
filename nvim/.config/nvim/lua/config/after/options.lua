@@ -1,4 +1,5 @@
-vim.cmd([[ hi Normal guibg=None ctermbg=None
+vim.cmd([[ 
+  hi Normal guibg=None ctermbg=None
   hi EndOfBuffer guibg=None ctermbg=None
   hi NormalNC guibg=NONE ctermbg=NONE
   hi NormalFloat guibg=NONE ctermbg=NONE
@@ -6,10 +7,11 @@ vim.cmd([[ hi Normal guibg=None ctermbg=None
 ]])
 
 vim.cmd([[
-  highlight LineNr guifg=white ctermfg=white
-  highlight CursorLineNr guifg=white ctermfg=white
-  highlight LineNrAbove guifg=#F8B1CE ctermfg=red
-  highlight LineNrBelow guifg=#93C47D ctermfg=green
+  hi LineNr guifg=white ctermfg=white
+  hi CursorLineNr guifg=white ctermfg=white
+  hi LineNrAbove guifg=#F8B1CE ctermfg=red
+  hi LineNrBelow guifg=#93C47D ctermfg=green
+  hi SignColumn guibg=None
 ]])
 
 -- 기타 --> Illuminated
@@ -21,7 +23,7 @@ vim.cmd([[hi VM_Extend guifg=#ffffff guibg=green]]) -- 멀티커서가 잡혔을
 vim.cmd([[set guicursor=n-v-c:block-Cursor ]])
 vim.cmd([[set guicursor+=i-ci-ve:block-iCursor/lCursor]]) -- 왜 이걸 설정해야지만 색이 바뀌는거지?
 
-vim.cmd([[hi VM_Cursor guibg=black guifg=white]])         -- 커서의 색 같음
+vim.cmd([[hi VM_Cursor guibg=black guifg=white]]) -- 커서의 색 같음
 vim.cmd([[hi Cursor guibg=white  guifg=black]])
 vim.cmd([[hi iCursor guibg=#e69138  guifg=black]])
 vim.cmd([[hi vCursor guibg=black guifg=white]])

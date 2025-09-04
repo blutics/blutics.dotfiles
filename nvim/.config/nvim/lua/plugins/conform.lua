@@ -16,6 +16,10 @@
 -- 그런데 단순히 설정내용만 바뀌는건 문제가 안될 수도 있기는함
 -- 내가 겪었던 상황은 prettier.config.ts -> .prettierrc로의 변경이어서
 -- 파일을 바꾸었는데도 prettier.config.ts를 찾았음
+--
+-- ---------------------------------
+-- 이러면 궂이 mason이 필요한가....
+-- 중요 서버들은 대부분 직접설치하고 있는데....
 local make_prettier_related_options = function()
 	return { "prettierd", "prettier", stop_after_first = true }
 end

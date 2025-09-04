@@ -1,9 +1,9 @@
-vim.o.guifont = "JetBrainsMono Nerd Font:h10"
+-- vim.o.guifont = "JetBrainsMono Nerd Font:h10"
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-indentDepth = 2
+local indentDepth = 2
 
 vim.opt.smartindent = true        -- 스마트 들여쓰기
 vim.opt.tabstop = indentDepth     -- 탭 너비를 4로 설정
@@ -38,16 +38,6 @@ vim.opt.splitright = true -- 수직 분할 시 오른쪽으로
 
 -- 현재 라인 하이라이트 활성화
 vim.opt.cursorline = true
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "yaml", "yml", "markdown" },
-  callback = function()
-    vim.opt_local.tabstop = 2
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.expandtab = true
-    vim.opt_local.softtabstop = 2
-  end,
-})
 
 -- init.lua 또는 다른 설정 파일에 추가
 vim.api.nvim_create_autocmd("VimLeavePre", {
