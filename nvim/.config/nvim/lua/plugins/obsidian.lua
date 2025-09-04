@@ -1,66 +1,58 @@
+-- plugins/obsidian.lua 또는 유사 파일
+
 return {
-  "epwalsh/obsidian.nvim",
-  version = "*", -- recommended, use latest release instead of latest commit
-  lazy = true,
-  enabled = false,
-  ft = "markdown",
-  dependencies = {
-    "nvim-lua/plenary.nvim",
-  },
-  opts = {
-    ui = { enable = false },
-    note_id_func = function(title)
-      -- 타임스탬프 생성: YYMMDDHHMMSS.sss
-      local timestamp = tostring(os.time())
-      -- 4자리 알파벳 대문자 해시 생성
-      local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-      local hash = ""
-      for i = 1, 4 do
-        local random_index = math.random(1, #chars)
-        hash = hash .. string.sub(chars, random_index, random_index)
-      end
+	"epwalsh/obsidian.nvim",
+	version = "*", -- 최신 버전을 사용하도록 권장
+  enabled=false,
+	lazy = true,
+	event = {
+		-- Vault 안의 마크다운 파일을 열 때 플러그인을 로드합니다.
+		"BufReadPre "
+			.. vim.fn.expand("~")
+			.. "/ZK/**.md",
+		"BufNewFile " .. vim.fn.expand("~") .. "/ZK/**.md",
+		-- 위 경로는 자신의 Vault가 위치한 대략적인 상위 경로로 수정하면 성능에 도움이 됩니다.
+		-- 예: "~/Documents/Obsidian/**.md"
+		-- 잘 모르겠다면 그냥 "BufReadPre *.md"로 해도 되지만, 모든 마크다운 파일에서 검사를 수행합니다.
+	},
+	dependencies = {
+		"nvim-lua/plenary.nvim",
+	},
 
-      if title ~= nil and title ~= "" then
-        -- 한글 허용 버전
-        local cleaned_title = title:gsub("%s+", "_"):gsub("[^%w_ㄱ-ㅎ가-힣]", "")
-        return string.format("%s-%s-%s", timestamp, hash, cleaned_title)
-      else
-        return string.format("%s-%s", timestamp, hash)
-      end
-    end,
-    templates = {
-      folder = "templates",
-      substitutions = {
-        -- aliases = "\n  - "
-      },
-    },
-    workspaces = {
-      {
-        name = "personal",
-        path = "/mnt/d/obsidian/personal_vault/",
-        templates = {
-          subdir = "templates",
-          default_template = "default", -- 기본 템플릿 파일 이름 (확장자 제외)
-        },
-      },
-      {
-        name = "tech",
-        path = "/mnt/d/obsidian/tech_vault/",
-      },
-    },
+	opts = function()
+		-- 현재 파일의 경로에서부터 상위로 올라가며 '.obsidian' 디렉토리를 찾습니다.
+		local vault_dir = vim.fs.find({ ".obsidian" }, {
+			upward = true,
+			type = "directory",
+			path = vim.api.nvim_buf_get_name(0), -- 현재 버퍼의 경로를 시작점으로 지정
+		})[1] -- vim.fs.find는 결과를 테이블로 반환하므로 첫 번째 요소를 가져옵니다.
 
-    notes_subdir = "notes/inbox",
-    daily_notes = {
-      folder = "notes/dailies",
-      date_format = "%Y-%m-%d",
-      alias_format = "%B %-d, %Y",
-      default_tags = { "daily-notes" },
-      template = nil,
-    },
-    completion = {
-      nvim_cmp = true,
-    },
+		-- '.obsidian'을 찾았다면, 그 부모 디렉토리가 바로 Vault의 루트입니다.
+		local vault_root = vault_dir and vim.fn.fnamemodify(vault_dir, ":h")
 
-    -- see below for full list of options 👇
-  },
+		-- 만약 Vault를 찾지 못했다면, 플러그인이 로드되지 않도록 빈 설정을 반환합니다.
+		-- 이렇게 하지 않으면 일반 마크다운 파일을 열 때 에러가 발생할 수 있습니다.
+		if not vault_root then
+			return {}
+		end
+
+		print("Obsidian vault found at: " .. vault_root) -- 확인용 메시지 (나중에 지워도 됨)
+
+		-- 찾은 Vault 루트 경로를 사용하여 obsidian.nvim 설정을 반환합니다.
+		return {
+			dir = vault_root,
+
+			-- 여기에 다른 모든 obsidian.nvim 설정을 추가합니다.
+			notes_subdir = "notes",
+			daily_notes = {
+				folder = "daily",
+				date_format = "%Y-%m-%d",
+			},
+			completion = {
+        blink_cmp = true,
+				min_chars = 2,
+			},
+			-- 등등...
+		}
+	end,
 }

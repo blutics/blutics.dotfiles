@@ -7,6 +7,7 @@ vim.lsp.enable("tailwindcss")
 vim.lsp.enable("html")
 vim.lsp.enable("cssls")
 vim.lsp.enable("eslint")
+-- vim.lsp.enable("marksman")
 
 vim.diagnostic.config({
 	float = { border = "rounded" },
