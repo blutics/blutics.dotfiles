@@ -1,8 +1,8 @@
 
-
-
-
-
-
 */**/.ropeproject
 */**/.mypy_cache
+
+
+nvim/.config/*
+!nvim/.config/nvim
+
