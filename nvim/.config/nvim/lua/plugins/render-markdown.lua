@@ -1,3 +1,5 @@
+-- 와! markdown 포멧lsp를 prettier에서 dprint로 바꾸니까. 
+-- 굉장히 쾌적해지고 여기서 render-markdown을 적용시키니 굉장히 이쁘게 나오네....
 return {
   "MeanderingProgrammer/render-markdown.nvim",
   -- dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.nvim" }, -- if you use the mini.nvim suite
@@ -7,16 +9,19 @@ return {
   config = function()
     require("render-markdown").setup({
       heading = {
-        -- enabled = false,
+        enabled = true,
+        sign = true,
+        border = true,
+        
         left_margin = 0,
-        left_pad = 0,
+        left_pad = 2,
         icons = {
-          "HEADER 󰬺. ",
-          "HEADER 󰬻. ",
-          "HEADER 󰬼. ",
-          "HEADER 󰬽. ",
-          "HEADER 󰬾. ",
-          "HEADER 󰬿. ",
+          "󰬺. ",
+          "󰬻. ",
+          "󰬼. ",
+          "󰬽. ",
+          "󰬾. ",
+          "󰬿. ",
         },
         signs = {
           '󰫵',
@@ -24,11 +29,12 @@ return {
       },
 
       indent = {
-        enabled = false,
+        enabled = true,
         render_modes = true,
         skip_heading = true,
         skip_level = 0,
       },
+      
     })
   end,
 }
