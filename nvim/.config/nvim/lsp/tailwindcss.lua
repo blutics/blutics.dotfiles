@@ -15,12 +15,28 @@ return {
 		"postcss.config.cjs",
 		"package.json",
 	}),
-  filetypes = {
-    "html","css","scss","sass","less","postcss","stylus","sugarss",
-    "javascript","javascriptreact","typescript","typescriptreact",
-    "svelte","vue","astro","markdown","mdx","templ","php","blade",
-    -- 필요시 더 추가
-  },
+	filetypes = {
+		"html",
+		"css",
+		"scss",
+		"sass",
+		"less",
+		"postcss",
+		"stylus",
+		"sugarss",
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"svelte",
+		"vue",
+		"astro",
+		"mdx",
+		"templ",
+		"php",
+		"blade",
+		-- 필요시 더 추가
+	},
 	capabilities = caps,
 	-- LSP 서버가 반응할 파일 타입
 	settings = {
@@ -28,7 +44,7 @@ return {
 			validate = true,
 			classAttributes = { "class", "className", "ngClass" },
 			experimental = {
-        configFile = "src/styles/index.scss",
+				configFile = "src/styles/index.scss",
 				classRegex = {
 					"tw`([^`]*)`",
 					"tw\\(([^)]*)\\)",
