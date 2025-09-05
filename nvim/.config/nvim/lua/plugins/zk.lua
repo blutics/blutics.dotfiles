@@ -24,6 +24,7 @@ return {
 			require("custom.zk_new_dir_telescope").new_in_dir({})
 		end, { desc = "ZkNew in picked directory (Telescope)" })
 		vim.api.nvim_set_keymap("n", "<leader>zo", "<Cmd>ZkNotes { sort = { 'modified' } }<CR>", opts)
+		vim.api.nvim_set_keymap("n", "<leader>zO", "<Cmd>ZkNotes { hrefs = {'00-inbox'}, sort = { 'modified' } }<CR>", opts)
 		-- Open notes associated with the selected tags.
 		vim.api.nvim_set_keymap("n", "<leader>zt", "<Cmd>ZkTags<CR>", opts)
 		vim.api.nvim_set_keymap("n", "<leader>zb", "<Cmd>ZkBacklinks<CR>", opts)
