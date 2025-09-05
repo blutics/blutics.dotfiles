@@ -3,7 +3,7 @@
 -- 프로젝트에 설치되어 있는 prettier를 사용하기 위한 백그라운드 프로세스!
 -- 이를 이용해서 prettier-plugin-tailwindcss를 추가해서 사용할 수 있는데
 -- 이를 이용하면 클래스 내일은 정렬할 수 있다
--- 
+--
 -- 여기에서 이를 사용하기 위해서는 프로젝트 루트에 prettier 설정파일이 있어야한다
 -- 근데 이 prettierd를 하나만 띄워놓고 사용
 -- 그래서 만약에 프로젝트에서 prettier 설정파일 이 바뀌면 이를 바로 반영해주지 못한다.
@@ -18,18 +18,28 @@
 -- 파일을 바꾸었는데도 prettier.config.ts를 찾았음
 --
 -- ---------------------------------
+--
 -- 이러면 궂이 mason이 필요한가....
 -- 중요 서버들은 대부분 직접설치하고 있는데....
+--
+-- ---------------------------------
+--
+-- prettierd와 prettier의 markdown 이슈
+-- 자바스크립트나 타입스크립트에서는 문제가 없지만
+-- 마크다운에서 버벅임이 생긴다.
+-- 그래서 dprint로 변경함.
+--
 local make_prettier_related_options = function()
 	return { "prettierd", "prettier", stop_after_first = true }
 end
 local make_prettier_args = function(ctx)
-	local args = { "--single-quote", "--no-semi", "--use-tabs", "--tab-width", "2", "--yaml-parser", "yaml" }
+	local args = { "--single-quote", "--no-semi", "--use-tabs", "--tab-width", "2" }
 	return args
 end
 return {
 	{
 		"stevearc/conform.nvim",
+		-- enabled = false,
 		dependencies = {
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 		},
@@ -57,10 +67,14 @@ return {
 				json = make_prettier_related_options(),
 				css = make_prettier_related_options(),
 				html = make_prettier_related_options(),
-				markdown = make_prettier_related_options(),
+				markdown = { "dprint", stop_after_first = true },
 				nix = { "alejandra" },
 			},
 			formatters = {
+				dprint = {
+					command = "dprint",
+					args = { "fmt", "--stdin", "$FILENAME" },
+				},
 				isort = {
 					prepend_args = { "--profile", "black" },
 				},
@@ -79,9 +93,19 @@ return {
 				},
 			},
 		},
-		-- init = function()
-		-- 	-- If you want the formatexpr, here is the place to set it
-		-- 	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-		-- end,
+		init = function()
+			-- 	-- If you want the formatexpr, here is the place to set it
+			-- 	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = { "markdown" },
+				callback = function()
+					-- 커서 이동/입력 시 자동 포맷 억제
+					vim.bo.formatexpr = "" -- conform의 formatexpr 사용 금지
+					vim.opt_local.formatoptions:remove({ "a" }) -- auto-format as you type 금지
+					-- 평이한 문단 래핑 정도만 남김
+					vim.opt_local.formatoptions:append({ "tcqnj" })
+				end,
+			})
+		end,
 	},
 }

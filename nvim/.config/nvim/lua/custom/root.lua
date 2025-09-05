@@ -5,6 +5,8 @@ local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
 
 -- 패턴: 여기만 고치면 전 구성요소가 따라옴
 local PATTERNS = {
+	".marksman.toml",
+	".zk",
 	-- JS/TS
 	"package.json",
 	"pnpm-lock.yaml",

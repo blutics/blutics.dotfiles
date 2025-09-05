@@ -18,6 +18,8 @@ return {
 				"html-lsp",
 				"css-lsp",
 				"tailwindcss-language-server",
+        -- markdown
+        "dprint",
 
 				-- "pyright",
 				"black",
