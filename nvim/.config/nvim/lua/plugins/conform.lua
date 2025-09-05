@@ -93,19 +93,5 @@ return {
 				},
 			},
 		},
-		init = function()
-			-- 	-- If you want the formatexpr, here is the place to set it
-			-- 	vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-			vim.api.nvim_create_autocmd("FileType", {
-				pattern = { "markdown" },
-				callback = function()
-					-- 커서 이동/입력 시 자동 포맷 억제
-					vim.bo.formatexpr = "" -- conform의 formatexpr 사용 금지
-					vim.opt_local.formatoptions:remove({ "a" }) -- auto-format as you type 금지
-					-- 평이한 문단 래핑 정도만 남김
-					vim.opt_local.formatoptions:append({ "tcqnj" })
-				end,
-			})
-		end,
 	},
 }
