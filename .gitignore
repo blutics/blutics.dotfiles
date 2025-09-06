@@ -6,3 +6,4 @@
 nvim/.config/*
 !nvim/.config/nvim
 
+zsh/rc.d/xx*
