@@ -18,6 +18,8 @@ vim.opt.wrap = false              -- 긴 줄 줄바꿈 비활성화
 vim.opt.encoding = "utf-8"
 vim.opt.fileencoding = "utf-8"
 vim.scriptencoding = "utf-8"
+pcall(vim.cmd, "language messages en_US.UTF-8")  -- 모든 메시지를 영어로
+vim.o.helplang = "en"                             -- :help 우선 언어도 영어
 
 -- 라인 넘버 표시
 vim.opt.number = true

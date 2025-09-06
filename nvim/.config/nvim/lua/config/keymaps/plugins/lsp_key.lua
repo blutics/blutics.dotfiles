@@ -19,7 +19,7 @@ vim.keymap.set("n", "<leader>gss", ":Telescope lsp_document_symbols<CR>", { desc
 -- 전체 workspace의 심볼
 vim.keymap.set("n", "<leader>gsS", ":Telescope lsp_workspace_symbols<CR>", { desc = "Current Project Symbols" })
 
-vim.keymap.set("n", "<leader>gso", ":SymbolsOutline<CR>", {desc = "Toggle Symbol Outline"})
+-- vim.keymap.set("n", "<leader>gso", ":SymbolsOutline<CR>", {desc = "Toggle Symbol Outline"})
 
 -- 동적 workspace 심볼 검색
 vim.keymap.set(
