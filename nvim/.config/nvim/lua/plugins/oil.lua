@@ -1,52 +1,16 @@
-function make_custom_float_setting()
-	return {
-		max_width = 0,
-		win_options = {
-			winblend = 0,
-			cursorline = true,
-		},
-		margin = {
-			top = 2,
-			right = 3,
-			bottom = 2,
-			left = 3,
-		},
-		override = function()
-			-- 화면 크기의 80%를 사용
-			local width = math.floor(vim.o.columns * 0.8)
-			local height = math.floor(vim.o.lines * 0.8)
-
-			-- 중앙 정렬을 위한 위치 계산
-			local row = math.floor((vim.o.lines - height) / 2)
-			local col = math.floor((vim.o.columns - width) / 2)
-			vim.api.nvim_create_autocmd("WinEnter", {
-				callback = function()
-					vim.wo.foldcolumn = "1"
-					vim.wo.signcolumn = "no"
-					vim.wo.numberwidth = 3
-				end,
-				once = true,
-			})
-
-			return {
-				border = "rounded",
-				row = row,
-				col = col,
-				width = width,
-				height = height,
-				relative = "editor",
-				style = "minimal",
-			}
-		end,
-	}
-end
-
+-- 따로 which-key로 키매핑 알려주는 창 만드려고 했는데 g?로
+-- 개발자가 만들어 놓은게 있다. ? 단독으로 바꾸는게 좋을까?
+-- 어차피 g.는 자주 사용하니까. g?도 자연스럽게 익혀질듯한데.
+--
+-- 요즘 파일 탐색 플러그인을 쓰면 보통 netrw를 끈다고 하네
+-- :Ex명령어가 안먹혀서 설정이 잘 못된건가 했는데 아니네
 return {
 	{
 		"stevearc/oil.nvim",
 		opts = {},
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
+			local make_custom_float_setting = require("custom.oil_float_window").make_custom_float_setting
 			require("oil").setup({
 				-- Oil will take over directory buffers (e.g. `vim .` or `:e src/`)
 				default_file_explorer = true,
