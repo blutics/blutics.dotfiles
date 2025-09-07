@@ -16,6 +16,14 @@ rc.d 폴더에 다양한 설정들을 나누어서 넣으면
 여기서 xx로 시작하는 확장자 zsh파일들은 리파지토리에 스테이징 되지 않으므로
 민감한 api key들은 이렇게 관리하면 된다.
 
+.zshrc .zshenv .zshprofile
+
+- 대화형, interactive
+- 스크립트, shell script
+
+
+
+
 ## nvim
 
 설치해줘야하는 대상들이 있다.
