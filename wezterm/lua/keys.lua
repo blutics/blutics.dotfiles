@@ -7,9 +7,9 @@ return function(config)
 	config.keys = config.keys or {}
 	-- 예시: Ctrl+Shift+R = 설정 재로드
   -- 재로드는 내장기능으로 단순한 예시
-	table.insert(config.keys, {
-		key = "R",
-		mods = "CTRL|SHIFT",
-		action = wezterm.action.ReloadConfiguration,
-	})
+	-- table.insert(config.keys, {
+	-- 	key = "R",
+	-- 	mods = "CTRL|SHIFT",
+	-- 	action = wezterm.action.ReloadConfiguration,
+	-- })
 end
