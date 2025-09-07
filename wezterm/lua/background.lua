@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 
 return function(config)
-	local CONFIG_DIR = wezterm.config_dir
+	local CONFIG_DIR = _G.WEZTERM_ROOT 
 	local bg = CONFIG_DIR .. "/assets/purple_3.jpg"
 	local blur = CONFIG_DIR .. "/assets/blurred_3.jpg"
 
