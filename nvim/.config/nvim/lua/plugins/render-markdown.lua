@@ -1,3 +1,13 @@
+local p = function(target, before, after)
+  -- target에 패딩을 넣을 수 있는 함수
+  if before == nil then
+    before = ""
+  end
+  if after == nil then
+    after = ""
+  end
+  return before .. target .. after
+end
 -- 와! markdown 포멧lsp를 prettier에서 dprint로 바꾸니까.
 -- 굉장히 쾌적해지고 여기서 render-markdown을 적용시키니 굉장히 이쁘게 나오네....
 return {
@@ -7,20 +17,18 @@ return {
 	-- enabled = false,
 	dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
 	config = function()
-		local p = function(target, before, after)
-			if before == nil then
-				before = ""
-			end
-			if after == nil then
-				after = ""
-			end
-			return before .. target .. after
-		end
 		local bullet_icons = { "●", "○", "◆", "◇" }
 		local padded_bullet_icons = {}
 		for i, value in ipairs(bullet_icons) do
 			table.insert(padded_bullet_icons, p(value, "", "   "))
 		end
+
+		local heading_icons = { "󰬺", "󰬻", "󰬼", "󰬽", "󰬾", "󰬿", "󰭀", "󰭁", "󰭂", }
+    local padded_heading_icons = {}
+		for i, value in ipairs(heading_icons) do
+			table.insert(padded_heading_icons, p(value, "", ". "))
+		end
+
 		require("render-markdown").setup({
 			render_modes = { "n", "i" },
 			heading = {
@@ -29,14 +37,7 @@ return {
 				border = true,
 				left_margin = 0,
 				left_pad = 2,
-				icons = {
-					"󰬺. ",
-					"󰬻. ",
-					"󰬼. ",
-					"󰬽. ",
-					"󰬾. ",
-					"󰬿. ",
-				},
+				icons = padded_heading_icons,
 				signs = {
 					"󰫵",
 				},
@@ -81,8 +82,8 @@ return {
 			quote = {
 				enabled = true,
 				render_modes = false,
-				icon = "▋",
-				left_pad = 3,
+				-- icon = "▋",
+				icon = "█",
 			},
 		})
 		-- 원하는 색으로
