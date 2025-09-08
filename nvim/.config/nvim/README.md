@@ -1,3 +1,4 @@
+
 # blutics.nvim
 
 ### cmp-nvim-lsp와 nvim 충돌, 2025-08-16 #good
