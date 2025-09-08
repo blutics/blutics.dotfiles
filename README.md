@@ -18,10 +18,9 @@ rc.d 폴더에 다양한 설정들을 나누어서 넣으면
 
 .zshrc .zshenv .zshprofile
 
-- 대화형, interactive
-- 스크립트, shell script
-
-
+- zshrc -> 일반적으로 여기에 모드 넣는다.
+- zshenv -> PATH나 환경변수들을 여기에 설정하면 좋다.
+- zshprofile -> 로그인에서 불러오는 설정
 
 
 ## nvim
@@ -34,5 +33,12 @@ fzf, rg, 그리고 lsp들!
 
 ## tmux
 
-플러그인을 설치해줘야한다.
+설치가 필요한 패키지, memmory 사용량과 cpu 사용량 확인을 위해서
+
+플러그인을 설치해줘야한다. Ctrl-b + I(대문자)
 Tmux 기본 키매핑을 정리해두면 좋을까?
+
+완전히 새롭게 리로드 하려면 tmux kill-server
+
+
+
