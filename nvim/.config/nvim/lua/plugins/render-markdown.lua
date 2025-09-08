@@ -84,6 +84,7 @@ return {
 				render_modes = false,
 				-- icon = "▋",
 				icon = "█",
+        repeat_linebreak = true,
 			},
 		})
 		-- 원하는 색으로
