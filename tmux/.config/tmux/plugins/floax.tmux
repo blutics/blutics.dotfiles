@@ -6,7 +6,6 @@ set -g @floax-height '70%'
 set -g @floax-border-color 'green'
 set -g @floax-text-color 'blue'
 
-
 # The default session name of the floating pane is 'scratch'
 # You can modify the session name with this option:
 set -g @floax-session-name 'popup-scratch'
