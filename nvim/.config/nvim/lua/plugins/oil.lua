@@ -37,6 +37,7 @@ return {
 					list = false,
 					conceallevel = 3,
 					concealcursor = "nvic",
+					winblend = 0,
 				},
 				-- 파일 시스템 작업 후 자동으로 LSP 새로고침
 				lsp_file_methods = {
@@ -89,6 +90,16 @@ return {
 			vim.keymap.set("n", "<leader><leader>-", function()
 				require("oil").open_float()
 			end, { desc = "Open Oil in float" })
+
+			vim.cmd.hi("NormalFloat guibg=NONE")
+			vim.cmd.hi("FloatBorder guibg=NONE")
+			local base = vim.api.nvim_get_hl(0, { name = "FloatTitle", link = false }) or {}
+			vim.api.nvim_set_hl(0, "FloatTitle", {
+				fg = base.fg, -- 기존 전경색 유지 (GUI)
+				ctermfg = base.ctermfg, -- TUI(16/256컬러)도 쓰신다면 같이 유지
+				bg = "NONE", -- 배경 제거
+				bold = true, -- 필요 시 굵게(기존 값 따르려면 base.bold)
+			})
 		end,
 	},
 }
