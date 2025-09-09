@@ -78,3 +78,4 @@ tmux파일은 conf라고 확장자가 붙지만 tmux전용 언어를 쓴다.
 
 - pass
 - sesh
+- bash-completion

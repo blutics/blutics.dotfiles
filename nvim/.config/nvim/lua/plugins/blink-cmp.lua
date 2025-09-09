@@ -2,7 +2,7 @@ return {
 	"saghen/blink.cmp",
 	-- optional: provides snippets for the snippet source
 	dependencies = { "rafamadriz/friendly-snippets" },
-	version = "1.*",
+	-- version = "1.*",
 	opts = {
 		-- All presets have the following mappings:
 		-- C-space: Open menu or open docs if already open
@@ -31,10 +31,11 @@ return {
 		},
 
 		sources = {
-			default = { "lsp", "path", "snippets", },
+			default = { "lsp", "path", "snippets" },
+			min_keyword_length = 2,
 		},
 
-		fuzzy = { implementation = "prefer_rust_with_warning" },
+		fuzzy = { implementation = "lua" },
 	},
 	opts_extend = { "sources.default" },
 	init = function()
