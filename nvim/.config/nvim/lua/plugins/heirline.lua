@@ -286,7 +286,7 @@ return {
 					-- print("1" .. self.cwd)
 					-- local path = require("custom.root").get_root_detail(self.file_dir)
 					local path = require("custom.root").get_root_detail(self.file_dir)
-          -- vim.print(self.fname)
+					-- vim.print(self.fname)
 					-- vim.notify("x :", path.shorten_relative)
 					-- print(path.root_path, path.file_path)
 					if path.shorten_relative == nil then
@@ -411,9 +411,9 @@ return {
 			end,
 			provider = function(self)
 				local search = self.search
-        if not search then
-          return ""
-        end
+				if not search then
+					return ""
+				end
 				return string.format("[%d/%d]", search.current, math.min(search.total, search.maxcount))
 			end,
 		}
@@ -438,12 +438,7 @@ return {
 
 		local LSPActive = {
 			condition = conditions.lsp_attached,
-			update = { "LspAttach", "LspDetach" },
-
-			-- You can keep it simple,
-			-- provider = " [LSP]",
-
-			-- Or complicate things a bit and get the servers names
+			update = { "LspAttach", "LspDetach", "BufEnter", "BufWinEnter", "BufDelete" },
 			provider = function()
 				local names = {}
 				for i, server in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
@@ -473,10 +468,7 @@ return {
 					table.insert(names, it.name or "?")
 				end
 				-- 아이콘은 취향대로: "" (가위) / "" (붓) 등
-				return ("[%s%s]"):format(
-					(#names > 0) and table.concat(names, " ") or "none",
-					use_lsp and " +LSP" or ""
-				)
+				return ("[%s%s]"):format((#names > 0) and table.concat(names, " ") or "none", use_lsp and " +LSP" or "")
 			end,
 			hl = { fg = "#FFA673", bold = true },
 		}
@@ -494,7 +486,7 @@ return {
 				return (#configured > 0) or (#running > 0)
 			end,
 			-- nvim-lint는 보통 저장/입력종료/버퍼진입에서 돌리니 그 타이밍에 갱신
-			update = { "BufEnter", "BufReadPost", "InsertLeave", "BufWritePost" },
+			update = { "BufEnter", "FileType", "BufWritePre", "LspAttach", "LspDetach" },
 			provider = function()
 				local lint = require("lint")
 				local running = (type(lint.get_running) == "function") and (lint.get_running(0) or {}) or {}
@@ -530,8 +522,8 @@ return {
 			Align,
 
 			LSPActive,
-      ConformActive,
-      LintActive,
+			ConformActive,
+			LintActive,
 			Space,
 			Ruler,
 			Space,
