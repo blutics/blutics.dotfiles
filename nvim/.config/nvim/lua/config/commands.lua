@@ -74,3 +74,42 @@ vim.api.nvim_create_user_command("LintInfo", function()
 	})
 	vim.notify(table.concat(lines, "\n"), vim.log.levels.INFO, { title = "nvim-lint · LintInfo" })
 end, {})
+
+vim.api.nvim_create_user_command("Fav", function()
+	require("custom.favdirs").pick()
+end, {})
+
+local function buf_dir()
+	local b = vim.api.nvim_buf_get_name(0)
+	if b == nil or b == "" then
+		return nil
+	end
+	return vim.fn.fnamemodify(b, ":p:h")
+end
+
+vim.api.nvim_create_user_command("FavAdd", function(opts)
+  local arg = opts.fargs[1]
+  local dir
+
+  if arg == "root" then
+    -- root 모드
+    dir = require("custom.root").get_current_root()
+  else
+    -- 일반 모드
+    dir = buf_dir()
+  end
+
+	if not dir then
+		vim.notify("현재 버퍼는 저장된 파일이 없습니다.", vim.log.levels.WARN)
+		return
+	end
+  require("custom.favdirs").add(dir)
+end, {
+  nargs = "?",
+  complete = function() return { "root" } end,
+  desc = "현재 버퍼 디렉터리 또는 프로젝트 루트를 즐겨찾기에 추가",
+})
+
+vim.api.nvim_create_user_command("FavDel", function()
+	require("custom.favdirs").delete_picker()
+end, {})

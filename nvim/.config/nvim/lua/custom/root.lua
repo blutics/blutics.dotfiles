@@ -4,9 +4,17 @@ local uv = vim.uv or vim.loop
 local is_windows = vim.fn.has("win32") == 1 or vim.fn.has("win64") == 1
 
 -- 패턴: 여기만 고치면 전 구성요소가 따라옴
+-- 매칭 매커니즘을 정확히 이해해야한다.
+-- 상위로 하나씩 올라가면서 한 레벨에서 모든 패턴을 체크하는 방식이 아니라
+-- 하나의 패턱으로 상위로 모두 체크하는 방식이네... 미쳤나....
 local PATTERNS = {
+  -- Lua
+  ".stylua.toml",
+  "stylua.toml",
+
 	".marksman.toml",
 	".zk",
+
 	-- JS/TS
 	"package.json",
 	"pnpm-lock.yaml",
@@ -15,15 +23,11 @@ local PATTERNS = {
 	".eslintrc.json",
 	".eslintrc.js",
 	".prettierrc",
-	".prettierrc.*",
-	"prettier.config.*",
+	-- "prettier.config.*",
 	-- Python
 	"pyproject.toml",
 	"setup.cfg",
 	"setup.py",
-	-- Lua
-	".stylua.toml",
-	"stylua.toml",
 	-- nix
 	"flake.nix",
 	"default.nix",
@@ -200,23 +204,46 @@ function M.find(buf)
 	return real(vim.fs.root(buf, PATTERNS)) or (f and real(vim.fs.dirname(f)) or nil)
 end
 
+local function is_dir(p)
+	local st = uv.fs_stat(p)
+	return st and st.type == "directory"
+end
+
+local function find_target_dir(path)
+	-- path가 파일경로일 때, 파일의 부모 경로를
+	-- path가 dir일 때는 현재 경로를 그대로 내보내는 함수
+	if path == nil then
+		return path
+	end
+	local check = is_dir(path)
+	if check then
+		return path
+	end
+	return vim.fs.dirname(path)
+end
+
 -- LSP용(root_dir): LSP 미부착 전제 → 패턴 > 파일 폴더
 function M.find_for_lsp(fname)
 	fname = real(fname)
-	local root_from_patterns = (fname and real(vim.fs.root(fname, PATTERNS)))
+	local _root = vim.fs.root(fname, PATTERNS)
+	local root_from_patterns = (fname and real(_root))
+	-- vim.print(fname .. "--> " .. _root .. "--> " .. root_from_patterns)
 	local root_from_filepath = (fname and real(vim.fs.dirname(fname)) or nil)
 	return root_from_patterns or root_from_filepath
 end
 
 function M.get_root_detail(fname)
-	-- print("ggg")
-	-- print("before : ", fname)
+	-- filepath가 들어와야하는데....
+  --
 	fname = canonical(fname)
+	fname = find_target_dir(fname)
 	-- print("after : " .. fname)
 	local root_path = M.find_for_lsp(fname)
 	local root_name = vim.fs.basename(root_path)
+	-- vim.print(root_path.." "..root_name)
 	local file_name = filename_only(fname) -- 디렉토리 네임이 들어오기도 한다.
-	local file_path = directory_first(fname)
+	-- local file_path = directory_first(fname)
+	local file_path = fname
 	-- print(root_path, file_path)
 	local relative_path = relpath(root_path, file_path)
 	local relative_length = norm_length(relative_path)

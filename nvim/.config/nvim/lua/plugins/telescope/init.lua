@@ -31,7 +31,7 @@ return {
     priority = 700,
     dependencies = {
       "nvim-lua/plenary.nvim",
-      { "ahmedkhalf/project.nvim" },
+      -- { "ahmedkhalf/project.nvim" },
       -- {
       --   "nvim-telescope/telescope-fzf-native.nvim",
       --   puild = "make",
@@ -81,12 +81,12 @@ return {
       })
       -- 색상정의 마지막
       --
-      vim.keymap.set("n", "<leader>ff", function()
-        builtin.find_files(themes.get_dropdown({
-          previewer = false,
-          layout_config = { height = 30 },
-        }))
-      end)
+      -- vim.keymap.set("n", "<leader>ff", function()
+      --   builtin.find_files(themes.get_dropdown({
+      --     previewer = false,
+      --     layout_config = { height = 30 },
+      --   }))
+      -- end)
 
       telescope.setup({
         pickers = {
@@ -136,21 +136,21 @@ return {
             override_generic_sorter = true,
             case_mode = "smart_case",
           },
-          projects = {
-            layout_strategy = "horizontal",
-            layout_config = {
-              width = 0.8,  -- 전체 창의 80%
-              height = 0.8, -- 전체 창의 80%
-              preview_width = 0.6, -- 프리뷰 창이 차지하는 비율
-              prompt_position = "top",
-            },
-            theme = "dropdown", -- dropdown 테마 사용
-            hidden_files = false, -- 숨김 파일 표시 여부
-          },
+          -- projects = {
+          --   layout_strategy = "horizontal",
+          --   layout_config = {
+          --     width = 0.8,  -- 전체 창의 80%
+          --     height = 0.8, -- 전체 창의 80%
+          --     preview_width = 0.6, -- 프리뷰 창이 차지하는 비율
+          --     prompt_position = "top",
+          --   },
+          --   theme = "dropdown", -- dropdown 테마 사용
+          --   hidden_files = false, -- 숨김 파일 표시 여부
+          -- },
         },
       })
 
-      telescope.load_extension("projects")
+      -- telescope.load_extension("projects")
       -- telescope.load_extension("fzf")
       -- telescope.load_extension("fidget")
       -- telescope.load_extension("noice")

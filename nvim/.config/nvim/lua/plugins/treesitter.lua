@@ -91,6 +91,9 @@ return {
 					},
 				},
 			})
+			-- vim.opt.foldmethod = "expr"
+			-- vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+			-- vim.opt.foldlevel = 99 -- 시작 시 기본적으로 모두 펼쳐진 상태
 		end,
 	},
 }

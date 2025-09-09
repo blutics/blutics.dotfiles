@@ -284,7 +284,9 @@ return {
 				-- evaluates to the full-lenth path
 				provider = function(self)
 					-- print("1" .. self.cwd)
+					-- local path = require("custom.root").get_root_detail(self.file_dir)
 					local path = require("custom.root").get_root_detail(self.file_dir)
+          -- vim.print(self.fname)
 					-- vim.notify("x :", path.shorten_relative)
 					-- print(path.root_path, path.file_path)
 					if path.shorten_relative == nil then

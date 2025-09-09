@@ -26,6 +26,34 @@ stow -R 폴더명 # --> 재적용 명령어라인
     .zshrc 혹은 .zshenv 같은 무조건 홈에 있어야하는 파일들만 넣어준다.
     이 외의 파일들은 1번에서 만든 하나의 디렉토리 안에서 관리한다.
 
+## bash
+
+zsh는 nvim에서 lsp, formatter, linter 지원이 너무 박하다.
+그래서 모두 bash로 변경!
+
+### XDG
+
+XDG = freedesktop.org의 Cross-Desktop Group 에서 정한 **데스크톱 표준(specification)**을 줄여 부르는 말입니다.
+리눅스/유닉스 환경에서 프로그램들이 설정 파일, 캐시, 데이터 파일을 어디에 저장할지 경로 규칙을 통일하자는 취지에서 나왔습니다.
+
+📌 XDG Base Directory Specification
+
+대표적인 게 바로 XDG Base Directory 규칙이에요.
+
+환경변수	기본값 (보통)	의미
+$XDG_CONFIG_HOME	~/.config	설정 파일(.conf 등)을 저장
+$XDG_DATA_HOME	~/.local/share	애플리케이션 데이터 저장
+$XDG_CACHE_HOME	~/.cache	캐시 데이터 저장
+
+즉, ~/.bashrc, ~/.vimrc 같은 홈 디렉터리 어질러놓기 대신
+
+설정은 ~/.config/appname/
+
+캐시는 ~/.cache/appname/
+
+데이터는 ~/.local/share/appname/
+에 정리하자는 거죠.
+
 
 ## zsh
 
