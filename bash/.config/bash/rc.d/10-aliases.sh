@@ -1,4 +1,3 @@
-
 alias ll='ls -al'
 alias cd="z"
 # base: 보기 좋은 일반 목록
@@ -12,4 +11,3 @@ alias ltt='eza -T -L3 --group --icons=auto --time-style=long-iso'
 alias lS='eza -l --header -s size -r -h --icons=auto'
 # 최근 변경순
 alias ltoday='eza -l --header -s modified -r --icons=auto'
-

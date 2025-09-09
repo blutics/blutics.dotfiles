@@ -1,8 +1,4 @@
-
-
-
-
 # ~/.bashrc
 if [ -f "$HOME/.config/bash/.bashrc" ]; then
-    . "$HOME/.config/bash/.bashrc"
+  . "$HOME/.config/bash/.bashrc"
 fi

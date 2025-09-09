@@ -10,16 +10,20 @@ return {
 		dependencies = {},
 		opts = {
 			automatic_installation = true,
-      -- 시발 typescript-language-server와 pyright는 그냥 글로벌로 설치하면 간단히 사용가능하다.
+			-- 시발 typescript-language-server와 pyright는 그냥 글로벌로 설치하면 간단히 사용가능하다.
 			ensure_installed = {
+				-- "bash-language-server",
+				"shellcheck",
+				"shfmt",
+
 				"lua-language-server",
 
 				-- "typescript-language-server", -- TypeScript/JavaScript
 				"html-lsp",
 				"css-lsp",
 				"tailwindcss-language-server",
-        -- markdown
-        "dprint",
+				-- markdown
+				"dprint",
 
 				-- "pyright",
 				"black",

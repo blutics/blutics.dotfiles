@@ -8,6 +8,7 @@ vim.lsp.enable("html")
 vim.lsp.enable("cssls")
 vim.lsp.enable("eslint")
 -- vim.lsp.enable("marksman")
+vim.lsp.enable("bashls")
 
 vim.diagnostic.config({
 	float = { border = "rounded" },

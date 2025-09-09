@@ -69,6 +69,8 @@ return {
 				html = make_prettier_related_options(),
 				markdown = { "dprint", stop_after_first = true },
 				nix = { "alejandra" },
+				sh = { "shfmt" },
+				bash = { "shfmt" },
 			},
 			formatters = {
 				dprint = {
@@ -90,6 +92,9 @@ return {
 				},
 				prettier = {
 					prepend_args = make_prettier_args,
+				},
+				shfmt = {
+					prepend_args = { "-i", "2", "-ci", "-bn" }, -- 예: 2칸 들여쓰기, case indent
 				},
 			},
 		},

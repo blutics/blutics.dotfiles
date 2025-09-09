@@ -19,7 +19,9 @@ return {
 				-- Lua
 				-- lua = { "luacheck" },
 				-- 쉘/마크다운/기타
-				-- sh = { "shellcheck" },
+				sh = { "shellcheck" },
+				bash = { "shellcheck" },
+
 				-- markdown = { "markdownlint" },
 				-- yaml = { "yamllint" },
 				-- dockerfile = { "hadolint" },

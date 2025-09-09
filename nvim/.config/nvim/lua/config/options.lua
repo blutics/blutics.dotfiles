@@ -55,3 +55,14 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
   end,
   group = vim.api.nvim_create_augroup("CleanupOnExit", { clear = true }),
 })
+
+
+vim.filetype.add({
+  filename = {
+    [".bashrc"] = "bash",
+    [".bash_profile"] = "bash",
+    [".bash_login"] = "bash",
+  },
+})
+
+
