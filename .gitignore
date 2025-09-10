@@ -6,6 +6,9 @@
 nvim/.config/*
 !nvim/.config/nvim
 
+bash/.config/*
+!bash/.config/bash
+
 tmux/.config/tmux/plugins/*
 
 zsh/rc.d/xx*

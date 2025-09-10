@@ -132,10 +132,11 @@
 
   handlers:
     - name: pacman-db-update
-      ansible.builtin.command: pacman -Fy || true
+      ansible.builtin.command: pacman -Fy
       args:
         executable: /bin/bash
       changed_when: false
+      failed_when: false
     - name: restart-resolved
       ansible.builtin.systemd:
         name: systemd-resolved
