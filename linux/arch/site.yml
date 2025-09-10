@@ -205,26 +205,12 @@
         state: directory
         mode: "0755"
 
-    # - name: 쉘에 PNPM_HOME & PATH 추가 (bash/zsh 공통)
-    #   become: false
-    #   ansible.builtin.blockinfile:
-    #     path: "{{ item }}"
-    #     create: true
-    #     mode: "0644"
-    #     marker: "# {mark} ANSIBLE PNPM PATH"
-    #     block: |
-    #       export PNPM_HOME="$HOME/.local/share/pnpm"
-    #       case ":$PATH:" in *":$PNPM_HOME:"*) ;; *) export PATH="$PNPM_HOME:$PATH";; esac
-      # loop:
-      #   - "{{ user_home }}/.bashrc"
-
     - name: pnpm 전역 패키지 설치 (루트리스, target_user 환경)
       become: false
       ansible.builtin.shell: |
         # set -e
-        # export PNPM_HOME="{{ pnpm_home }}"
+        # export PNPM_HOME="{{ pnpm_home }}" --> 이 부분은 bash설정에 미리 넣어 놓았다.
         # export PATH="$PNPM_HOME:$PATH"
-        pnpm setup
         pnpm add -g {{ pnpm_global_packages | join(' ') }}
       args:
         executable: /bin/bash
