@@ -197,14 +197,10 @@
       ansible.builtin.file:
         path: "{{ pnpm_home }}"
         state: directory
-        mode: "0755"
 
     - name: pnpm 전역 패키지 설치 (루트리스, target_user 환경)
       become: false
       ansible.builtin.shell: |
-        # set -e
-        # export PNPM_HOME="{{ pnpm_home }}" --> 이 부분은 bash설정에 미리 넣어 놓았다.
-        # export PATH="$PNPM_HOME:$PATH"
         pnpm add -g {{ pnpm_global_packages | join(' ') }}
       args:
         executable: /bin/bash
