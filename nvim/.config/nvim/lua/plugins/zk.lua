@@ -1,27 +1,6 @@
--- ★ .zk가 있는 프로젝트에서만 zk LSP attach
-local function zk_root_for(bufnr)
-	bufnr = bufnr or 0
-	local name = vim.api.nvim_buf_get_name(bufnr)
-	if name == nil or name == "" then
-		return nil
-	end
-	local start = vim.fs.dirname(name)
-	-- 현재 디렉터리부터 위로 .zk 디렉터리를 찾음
-	local root = vim.fs.root(start, { ".zk" })
-	if not root then
-		return nil
-	end
-	-- .zk 실제 존재 확인(안전)
-	if vim.fn.isdirectory(root .. "/.zk") ~= 1 then
-		return nil
-	end
-	return root
-end
 
 local function zk_try_attach(bufnr)
-	local root = zk_root_for(bufnr)
-
-  vim.print("--> "..root)
+	local root = require("custom.zk_new_dir_telescope").zk_root_for(bufnr)
 	if not root then
 		return
 	end

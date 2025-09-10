@@ -120,8 +120,6 @@ local function make_link(target_abs, header, link_style, keep_ext, display_title
 	local filename_base = vim.fn.fnamemodify(target_abs, ":t:r")
 	local display = (display_title and display_title ~= "" and display_title) or filename_base
 	local anchor = header and ("#" .. slugify_gfm(header.name)) or ""
-	vim.print(anchor)
-
 	if link_style == "wiki" then
 		if rel:sub(-3) == ".md" then
 			rel = rel:sub(1, -4)
@@ -172,7 +170,6 @@ function M.insert_link_with_header(opts)
 		local headers = headers_via_existing_marksman(note.absPath, opts.timeout_ms, {
 			open_if_needed = true, -- 필요 없다면 false
 		}) or {}
-		vim.print(headers)
 
 		pick_header(note.absPath, headers, function(header)
 			local link = make_link(note.absPath, header, opts.link_style, opts.keep_md_extension, display_title)

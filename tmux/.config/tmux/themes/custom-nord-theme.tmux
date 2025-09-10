@@ -12,7 +12,7 @@ active_pane_border="#abb2bf"
 set -g status-position bottom
 set -g status-left-length 200   # default: 10
 set -g status-right-length 200  # default: 10
-set -g status-left "#[fg=${session_fg},bold,bg=${bg}]  #S"
+set -g status-left "#[fg=${session_fg},bold,bg=${bg}]   #S"
 set -g status-right " #{cpu -i 3} M #{mem}"
 set -ag status-right "#[fg=${default_fg},bg=${bg}] 󰃮 %y-%m-%d 󱑒 %H:%M"
 set -g status-justify centre

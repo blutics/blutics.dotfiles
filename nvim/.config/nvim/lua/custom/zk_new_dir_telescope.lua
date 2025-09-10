@@ -89,6 +89,26 @@ local function build_cmd(tbl)
 	return ("ZkNew { %s }"):format(table.concat(parts, ", "))
 end
 
+-- ★ .zk가 있는 프로젝트에서만 zk LSP attach
+function M.zk_root_for(bufnr)
+	bufnr = bufnr or 0
+	local name = vim.api.nvim_buf_get_name(bufnr)
+	if name == nil or name == "" then
+		return nil
+	end
+	local start = vim.fs.dirname(name)
+	-- 현재 디렉터리부터 위로 .zk 디렉터리를 찾음
+	local root = vim.fs.root(start, { ".zk" })
+	if not root then
+		return nil
+	end
+	-- .zk 실제 존재 확인(안전)
+	if vim.fn.isdirectory(root .. "/.zk") ~= 1 then
+		return nil
+	end
+	return root
+end
+
 function M.new_in_dir(opts)
 	opts = vim.tbl_deep_extend("force", M.opts, opts or {})
 
@@ -98,7 +118,10 @@ function M.new_in_dir(opts)
 	local actions = require("telescope.actions")
 	local action_state = require("telescope.actions.state")
 
-	local dirs = list_dirs(opts.root, opts.depth, opts.show_hidden, opts.ignore)
+  local cb = vim.api.nvim_get_current_buf()
+  local root = M.zk_root_for(cb)
+
+	local dirs = list_dirs(root, opts.depth, opts.show_hidden, opts.ignore)
 
 	local function do_create(dir)
 		if not dir or dir == "" then
@@ -127,8 +150,6 @@ function M.new_in_dir(opts)
 			finder = finders.new_table({
 				results = dirs,
 				entry_maker = function(p)
-					vim.print(p)
-					vim.print(opts.root)
 					return {
 						value = p,
 						display = path_rel(p, opts.root),
