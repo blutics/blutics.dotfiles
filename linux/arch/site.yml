@@ -227,14 +227,14 @@
         pnpm add -g {{ pnpm_global_packages | join(' ') }}
       args:
         executable: /bin/bash
-      environment:
-        HOME: "{{ user_home }}"
+      # environment:
+      #   HOME: "{{ user_home }}"
 
   handlers:
     - name: pacman-db-update
       ansible.builtin.command: pacman -Fy || true
       args:
-        excutable: /bin/bash
+        executable: /bin/bash
       changed_when: false
     - name: restart-resolved
       ansible.builtin.systemd:
