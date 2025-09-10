@@ -1,0 +1,187 @@
+- hosts: local
+  become: true
+  vars:
+    target_user: "{{ lookup('env','SUDO_USER') | default(lookup('env','USER'), true) }}"
+    user_home: "{{ '/home/' ~ target_user if target_user != 'root' else '/root' }}"
+    pnpm_home: "{{ user_home }}/.local/share/pnpm"
+    workdir: "{{ ansible_env.HOME }}/.cache/ansible-aur"
+    pnpm_global_packages:
+      - prettier
+      - prettierd
+      - bash-language-server
+      - typescript
+      - typescript-language-server
+      - pyright
+    pacman_pkgs:
+      - base-devel
+      - git
+      - curl
+      - reflector
+      - python
+      - nodejs
+      - rust
+      - pnpm
+      - neovim
+      - tmux
+      - ripgrep
+      - fd
+      - fzf
+      - bat
+      - unzip
+      - wget
+      - openssh
+      - networkmanager
+      - readline
+      - bzip2
+      - zlib
+      - xz
+      - tk
+      - base-devel
+    # 선택: AUR 패키지
+    aur_pkgs:
+      - eza
+      - zoxide
+      - starship
+      - dprint-bin
+      - zk-bin
+
+  pre_tasks:
+    - name: 전체 업그레이드
+      community.general.pacman:
+        update_cache: true
+        upgrade: true
+
+    - name: pacman.conf 옵션(색/병렬)
+      ansible.builtin.replace:
+        path: /etc/pacman.conf
+        regexp: '^#?ParallelDownloads\s*=.*$'
+        replace: 'ParallelDownloads = 10'
+      notify: pacman-db-update
+    - name: pacman Color 켜기
+      ansible.builtin.lineinfile:
+        path: /etc/pacman.conf
+        regexp: '^#?Color$'
+        line: 'Color'
+        state: present
+
+  tasks:
+    - name: 패키지 설치
+      community.general.pacman:
+        name: "{{ pacman_pkgs }}"
+        state: present
+
+    - name: 1회 미러 시드
+      ansible.builtin.command: >
+        reflector --country 'KR,JP,US' --protocol https --latest 20 --sort rate
+        --save /etc/pacman.d/mirrorlist
+      args:
+        creates: /etc/pacman.d/mirrorlist
+
+    - name: reflector.timer 활성화
+      ansible.builtin.systemd:
+        name: reflector.timer
+        enabled: true
+        state: started
+
+    - name: systemd-resolved 드롭인 디렉토리
+      ansible.builtin.file:
+        path: /etc/systemd/resolved.conf.d
+        state: directory
+        mode: '0755'
+
+    - name: DNS 설정 드롭인
+      ansible.builtin.copy:
+        dest: /etc/systemd/resolved.conf.d/10-custom.conf
+        content: |
+          [Resolve]
+          DNS=1.1.1.1 8.8.8.8
+          FallbackDNS=9.9.9.9 1.0.0.1
+          DNSSEC=no
+          MulticastDNS=no
+          LLMNR=no
+        mode: '0644'
+      notify: restart-resolved
+
+    - name: systemd-resolved 활성화
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        enabled: true
+        state: started
+
+    - name: resolv.conf를 stub로 링크
+      ansible.builtin.file:
+        src: /run/systemd/resolve/stub-resolv.conf
+        dest: /etc/resolv.conf
+        state: link
+        force: true
+
+    # --- AUR (선택) ---
+    # kewlfft.aur 사용 시: 일반 사용자로 빌드하는 것이 원칙
+    - name: paru 설치 (없으면)
+      become: false
+      vars:
+        workdir: "{{ ansible_env.HOME }}/.cache/ansible-aur"
+      block:
+        - ansible.builtin.file:
+            path: "{{ workdir }}"
+            state: directory
+        - ansible.builtin.stat:
+            path: /usr/bin/paru
+          register: paru_bin
+        - ansible.builtin.git:
+            repo: https://aur.archlinux.org/paru-bin.git
+            dest: "{{ workdir }}/paru-bin"
+          when: not paru_bin.stat.exists
+        - ansible.builtin.command: makepkg -si --noconfirm
+          args:
+            chdir: "{{ workdir }}/paru-bin"
+          when: not paru_bin.stat.exists
+
+    - name: AUR 패키지 설치
+      become: false
+      ansible.builtin.command: "paru -S --needed --noconfirm {{ item }}"
+      loop: "{{ aur_pkgs | default([]) }}"
+      when: aur_pkgs | length > 0
+
+    - name: PNPM_HOME 디렉터리 보장 (~/.local/share/pnpm)
+      become: false
+      ansible.builtin.file:
+        path: "{{ pnpm_home }}"
+        state: directory
+        mode: "0755"
+
+    - name: 쉘에 PNPM_HOME & PATH 추가 (bash/zsh 공통)
+      become: false
+      ansible.builtin.blockinfile:
+        path: "{{ item }}"
+        create: true
+        mode: "0644"
+        marker: "# {mark} ANSIBLE PNPM PATH"
+        block: |
+          export PNPM_HOME="$HOME/.local/share/pnpm"
+          case ":$PATH:" in *":$PNPM_HOME:"*) ;; *) export PATH="$PNPM_HOME:$PATH";; esac
+      loop:
+        - "{{ user_home }}/.bashrc"
+        - "{{ user_home }}/.zshrc"
+
+    - name: pnpm 전역 패키지 설치 (루트리스, target_user 환경)
+      become: false
+      ansible.builtin.shell: |
+        set -e
+        export PNPM_HOME="{{ pnpm_home }}"
+        export PATH="$PNPM_HOME:$PATH"
+        pnpm add -g {{ pnpm_global_packages | join(' ') }}
+      args:
+        executable: /bin/bash
+      environment:
+        HOME: "{{ user_home }}"
+
+  handlers:
+    - name: pacman-db-update
+      ansible.builtin.command: pacman -Fy || true
+      listen: pacman-db-update
+    - name: restart-resolved
+      ansible.builtin.systemd:
+        name: systemd-resolved
+        state: restarted
+

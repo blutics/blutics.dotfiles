@@ -67,6 +67,7 @@ return {
 				json = make_prettier_related_options(),
 				css = make_prettier_related_options(),
 				html = make_prettier_related_options(),
+				yaml = { "dprint", stop_after_first = true },
 				markdown = { "dprint", stop_after_first = true },
 				nix = { "alejandra" },
 				sh = { "shfmt" },

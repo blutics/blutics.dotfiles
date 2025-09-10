@@ -10,3 +10,13 @@ nvim의 버젼을 올릴 방법을 찾던가 #zoll
 cmp-nvim-lsp의 문제가 해결되면 고정을 풀던가 #밥줄
 
 
+
+## 설치
+
+dprint
+bash-language-server
+typescript-language-server
+pyright
+prettierd
+
+zk
