@@ -4,7 +4,6 @@
     target_user: "{{ lookup('env','SUDO_USER') | default(lookup('env','USER'), true) }}"
     user_home: "{{ '/home/' ~ target_user if target_user != 'root' else '/root' }}"
     pnpm_home: "{{ user_home }}/.local/share/pnpm"
-    workdir: "{{ ansible_env.HOME }}/.cache/ansible-aur"
     pnpm_global_packages:
       - prettier
       - prettierd
@@ -37,13 +36,13 @@
       - xz
       - tk
       - base-devel
+      - zk
     # 선택: AUR 패키지
     aur_pkgs:
       - eza
       - zoxide
       - starship
       - dprint-bin
-      - zk-bin
 
   pre_tasks:
     - name: 전체 업그레이드
@@ -120,25 +119,69 @@
     - name: paru 설치 (없으면)
       become: false
       vars:
-        workdir: "{{ ansible_env.HOME }}/.cache/ansible-aur"
+        workdir: "/home/{{target_user}}/.cache/ansible-aur/paru-bin"
       block:
-        - ansible.builtin.file:
+        - name: 작업 디렉토리
+          ansible.builtin.file:
             path: "{{ workdir }}"
             state: directory
-        - ansible.builtin.stat:
+            mode: "0755"
+        - name: paru 존재 확인
+          become: true
+          ansible.builtin.stat:
             path: /usr/bin/paru
           register: paru_bin
-        - ansible.builtin.git:
+        - name: Create workdir owned by target user
+          become: true
+          ansible.builtin.file:
+            path: "{{ workdir }}"
+            state: directory
+            owner: "{{ target_user }}"
+            group: "{{ target_user }}"
+            mode: "0755"
+          when: not paru_bin.stat.exists
+        - name: AUR에서 paru-bin 클론
+          become: true
+          become_user: "{{target_user}}" 
+          ansible.builtin.git:
             repo: https://aur.archlinux.org/paru-bin.git
-            dest: "{{ workdir }}/paru-bin"
+            dest: "{{ workdir }}"
+            update: yes
           when: not paru_bin.stat.exists
-        - ansible.builtin.command: makepkg -si --noconfirm
+        - name: makepkg로 빌드(설치 X)
+          become: true
+          become_user: "{{target_user}}" 
+          ansible.builtin.command: makepkg -f --noconfirm
           args:
-            chdir: "{{ workdir }}/paru-bin"
+            chdir: "{{ workdir }}"
           when: not paru_bin.stat.exists
+        - name: 빌드 산출물 파일명 획득
+          become: true
+          become_user: "{{target_user}}" 
+          ansible.builtin.shell: |
+            set -e
+            f="$(ls -1 *.pkg.tar.* 2>/dev/null | grep -v -- '-debug-' | head -n 1 || true)"
+            [ -n "$f" ] || f="$(ls -1 *.pkg.tar.* | head -n 1)"
+            printf '%s' "$f"
+          args:
+            chdir: "{{ workdir }}"
+            executable: /bin/bash
+          register: paru_pkg
+          changed_when: false
+          when: not paru_bin.stat.exists
+    
+        - name: pacman으로 paru 패키지 설치
+          become: true
+          ansible.builtin.command: >
+            pacman -U --noconfirm "{{ workdir }}/{{ paru_pkg.stdout }}"
+          when:
+            - not paru_bin.stat.exists
+            - paru_pkg.stdout is defined
+            - paru_pkg.stdout | length > 0
 
     - name: AUR 패키지 설치
-      become: false
+      become: true
+      become_user: "{{ lookup('env','SUDO_USER') | default(lookup('env','USER'), true) }}"
       ansible.builtin.command: "paru -S --needed --noconfirm {{ item }}"
       loop: "{{ aur_pkgs | default([]) }}"
       when: aur_pkgs | length > 0
@@ -179,7 +222,9 @@
   handlers:
     - name: pacman-db-update
       ansible.builtin.command: pacman -Fy || true
-      listen: pacman-db-update
+      args:
+        excutable: /bin/bash
+      changed_when: false
     - name: restart-resolved
       ansible.builtin.systemd:
         name: systemd-resolved
