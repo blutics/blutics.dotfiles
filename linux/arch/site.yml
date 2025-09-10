@@ -39,6 +39,7 @@
       - zk
     # 선택: AUR 패키지
     aur_pkgs:
+      - vivid
       - eza
       - zoxide
       - starship
