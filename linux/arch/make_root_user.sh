@@ -112,3 +112,4 @@ echo " - 비밀번호    : ${pw_status}"
 echo " - WSL         : $(is_wsl && echo '감지됨(설정 적용)' || echo '아님')"
 echo "완료."
 
+rm "/home/${TARGET_USER}/.bashrc" "/home/${TARGET_USER}/.bash_profile"
