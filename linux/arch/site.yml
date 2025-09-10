@@ -6,7 +6,7 @@
     pnpm_home: "{{ user_home }}/.local/share/pnpm"
     pnpm_global_packages:
       - prettier
-      - prettierd
+      - "@fsouza/prettierd"
       - bash-language-server
       - typescript
       - typescript-language-server
@@ -120,8 +120,10 @@
       become: false
       vars:
         workdir: "/home/{{target_user}}/.cache/ansible-aur/paru-bin"
+        cachedir:  "/home/{{target_user}}/.cache"
       block:
         - name: 작업 디렉토리
+          become: false
           ansible.builtin.file:
             path: "{{ workdir }}"
             state: directory
@@ -132,7 +134,7 @@
             path: /usr/bin/paru
           register: paru_bin
         - name: Create workdir owned by target user
-          become: true
+          become: false
           ansible.builtin.file:
             path: "{{ workdir }}"
             state: directory
@@ -140,6 +142,16 @@
             group: "{{ target_user }}"
             mode: "0755"
           when: not paru_bin.stat.exists
+        - name: Create cache owned by target user
+          become: false
+          ansible.builtin.file:
+            path: "{{ cachedir }}"
+            state: directory
+            owner: "{{ target_user }}"
+            group: "{{ target_user }}"
+            mode: "0755"
+          when: not paru_bin.stat.exists
+
         - name: AUR에서 paru-bin 클론
           become: true
           become_user: "{{target_user}}" 
@@ -181,8 +193,8 @@
 
     - name: AUR 패키지 설치
       become: true
-      become_user: "{{ lookup('env','SUDO_USER') | default(lookup('env','USER'), true) }}"
-      ansible.builtin.command: "paru -S --needed --noconfirm {{ item }}"
+      become_user: "{{ target_user }}"
+      ansible.builtin.command: "paru -S --needed --noconfirm --sudoloop --skipreview {{ item }}"
       loop: "{{ aur_pkgs | default([]) }}"
       when: aur_pkgs | length > 0
 
@@ -205,7 +217,6 @@
           case ":$PATH:" in *":$PNPM_HOME:"*) ;; *) export PATH="$PNPM_HOME:$PATH";; esac
       loop:
         - "{{ user_home }}/.bashrc"
-        - "{{ user_home }}/.zshrc"
 
     - name: pnpm 전역 패키지 설치 (루트리스, target_user 환경)
       become: false
