@@ -192,13 +192,6 @@
             - paru_pkg.stdout is defined
             - paru_pkg.stdout | length > 0
 
-    - name: AUR 패키지 설치
-      become: true
-      become_user: "{{ target_user }}"
-      ansible.builtin.command: "paru -S --needed --noconfirm --sudoloop --skipreview {{ item }}"
-      loop: "{{ aur_pkgs | default([]) }}"
-      when: aur_pkgs | length > 0
-
     - name: PNPM_HOME 디렉터리 보장 (~/.local/share/pnpm)
       become: false
       ansible.builtin.file:
