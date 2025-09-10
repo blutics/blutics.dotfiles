@@ -37,6 +37,7 @@
       - tk
       - base-devel
       - zk
+      - pyenv
     # 선택: AUR 패키지
     aur_pkgs:
       - vivid
