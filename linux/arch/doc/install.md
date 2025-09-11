@@ -16,4 +16,10 @@
 13. tmux script 실행하기
 14. tmux 실행 -> C-b I(대문자): tmux플러그인 설치
 
+# WSL 관련 명령어
 
+wsl --install archlinux
+wsl -d archlinus
+wsl -d archlinux -u username
+wsl --unregister archlinux -> 해당 리눅스를 리스트에서 지우고 데이터도 삭제
+wsl --shutdown

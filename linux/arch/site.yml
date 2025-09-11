@@ -38,6 +38,10 @@
       - base-devel
       - zk
       - pyenv
+      - man-db
+      - man-pages
+      - less
+      - groff
     # 선택: AUR 패키지
     aur_pkgs:
       - vivid
