@@ -16,4 +16,5 @@ require("config.lsp")
 
 require("config.after.options")
 require("config.after.virtual-diagnostics-texts")
-
+require("config.after.ime-win")
+require("config.after.netrw-new-file")

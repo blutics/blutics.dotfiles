@@ -8,11 +8,15 @@ vim.cmd([[
 
 vim.cmd([[
   hi LineNr guifg=white ctermfg=white
-  hi CursorLineNr guifg=white ctermfg=white
-  hi LineNrAbove guifg=#F8B1CE ctermfg=red
-  hi LineNrBelow guifg=#93C47D ctermfg=green
+  hi CursorLineNr guifg=yellow ctermfg=yellow
+  hi LineNrAbove guifg=grey ctermfg=grey
+  hi LineNrBelow guifg=grey ctermfg=grey
   hi SignColumn guibg=None
 ]])
+
+-- hi CursorLineNr guifg=white ctermfg=white
+-- hi LineNrAbove guifg=#F8B1CE ctermfg=red
+-- hi LineNrBelow guifg=#93C47D ctermfg=green
 
 -- 기타 --> Illuminated
 vim.cmd([[hi CursorLine guibg=#2a2a3a]]) -- 기본적으로 커서가 있는 라인
