@@ -42,6 +42,10 @@
       - man-pages
       - less
       - groff
+      - yazi
+      - pass
+      - gnupg
+      - pinentry
     # 선택: AUR 패키지
     aur_pkgs:
       - vivid
